@@ -1,4 +1,19 @@
-# Given matrix X and class-indicator Y, the following function centers X, and then forms X1 and X2 which are scaled, as well as coefficients for back-scaling.
+#' Standardize the data
+#'
+#' Given matrix \eqn{X} and class-indicator \eqn{Y}, the following function centers \eqn{X}, and then forms \eqn{X1} and \eqn{X2} which are scaled, as well as coefficients for back-scaling.
+#'
+#' @param X A n by p matrix of n observations with p measurements per each.
+#' @param Y The class-indicator denoting a binary label for each observation.
+#' @param center wheather \eqn{X} will be centered or not. The default is "TURE".
+#'
+#' @return A list with components:
+#'     \item{X1}{Standardized observations labeled in group 1.}
+#'     \item{X2}{Standardized observations labeled in group 2.}
+#'     \item{coef1}{Coefficient of \eqn{X1} for back-scaling.}
+#'     \item{coef2}{Coefficient of \eqn{X2} for back-scaling.}
+#'     \item{Xmean}{Column mean for the matrix \eqn{X}.}
+#'
+#' @example man/examples/standardizeData_eg.R
 standardizeData <- function(X, Y, center = T){
   # center X
   Xmean = colMeans(X)
@@ -36,7 +51,7 @@ solve_DAP_R <-function(X1, X2, lambda, Vinit = NULL, eps = 1e-02, maxiter = 1000
     for (k in 1:p){
       t = Vold[k,] + rbind(crossprod(X1[,k],R1), crossprod(X2[,k], R2))
       normt = sqrt(sum(t^2))
-      if (normt <= lambda){ 
+      if (normt <= lambda){
         V[k,]=rep(0,2)
       }else {
         V[k,] = (1- lambda/normt)*t
@@ -63,10 +78,10 @@ solve_DAP_C <-function(X1, X2, lambda, Vinit = NULL, eps = 1e-02, maxiter = 1000
   out =.C("solveProj_withS", as.double(X1), as.double(X2), as.double(Vinit), as.double(lambda), as.integer(p),as.integer(n1), as.integer(n2), as.double(eps), as.integer(maxiter), as.integer(nitr))
   if (out[[10]]==maxiter){
     warning(paste("Projections didn't converge in ", maxiter, " iterations, try increasing the number of iterations or decreasing the convergence level.", sep=""))
-  }  
+  }
   V = matrix(out[[3]], p, 2)
   nfeature = sum(rowSums(abs(V))>0)
-  
+
   return(list(V=V, nfeature = nfeature, iter = out[[10]]))
 }
 
@@ -74,7 +89,7 @@ solve_DAP_C <-function(X1, X2, lambda, Vinit = NULL, eps = 1e-02, maxiter = 1000
 solve_DAP_seq <- function(X1, X2, lambda_seq, eps = 1e-2, m_max = 10000, feature_max = nrow(X1) + nrow(X2)){
   p =ncol(X1)
   n_lambda = length(lambda_seq)
-  
+
   ####initilize V1_mat, V2_mat, both p by n_lambda, V0
   V1_mat = V2_mat = matrix(NA, nrow = p, ncol = n_lambda)
   V0 = matrix(0, nrow = p, ncol = 2)
@@ -124,27 +139,27 @@ classify_DAP <- function(xtrain, ytrain, xtest, V, prior = TRUE){
       out = qda(xtrain %*% V, grouping = ytrain, prior = c(1/2,1/2))
     }
     pred = predict(out, newdata = xtest %*% V)
-    
+
     return(as.numeric(pred$class))
   }
 }
 
 # CV using projections as before
 cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, rho = 0, gamma1 = 0, gamma2 = 0, eps = 1e-6, m_max = 1000, myseed = 1001, prior = TRUE){
-  
+
   n = length(Y)
   n_lambda = length(lambda_seq)
-  
+
   error_mat = matrix(0.5, nfolds, n_lambda)
   #cor_mat = matrix(0, nfolds, n_lambda)
   nfeature_mat = matrix(NA, nfolds, n_lambda)
-  
+
   ####random set split the whole data set into k folds corresponding to n1 and n2
   set.seed(myseed)
   id = rep(NA, n)
   id[Y==1]<- sample(rep(seq_len(nfolds), length.out = sum(Y==1)))
   id[Y==2]<- sample(rep(seq_len(nfolds), length.out = sum(Y==2)))
-  
+
   for (nf in 1: nfolds){
     cat(nf)
     ####set training data and test data
@@ -153,14 +168,14 @@ cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, rho = 0, gamma1 = 0, gamma2 = 0,
     xtest = X[id == nf, ]
     ytest = Y[id == nf]
     out_s <- standardizeData(xtrain, ytrain, center = T)
-    
+
     # Calculate mean difference based on test data
     d_test = colMeans(xtest[ytest==1,])-colMeans(xtest[ytest==2,])
-        
+
     ####use solve_proj_seq
     fit_tmp = solve_DAP_seq(X1 = out_s$X1, X2 = out_s$X2, lambda_seq = lambda_seq, eps = eps, m_max = m_max, feature_max = n)
     nfeature_mat[nf,1:length(fit_tmp$nfeature_vec)] = fit_tmp$nfeature_vec
-    
+
     #### Calculate errors for each lambda
     for (j in 1:length(fit_tmp$lambda_seq)){
       V = cbind(diag(1/out_s$coef1)%*%fit_tmp$V1_mat[,j],diag(1/out_s$coef2)%*% fit_tmp$V2_mat[,j])
@@ -172,24 +187,24 @@ cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, rho = 0, gamma1 = 0, gamma2 = 0,
   cvm = colMeans(error_mat)
   index = which.min(cvm)
   lambda_min = lambda_seq[index]
-  
-  cvse = apply(error_mat, 2, sd)/sqrt(nfolds)  
+
+  cvse = apply(error_mat, 2, sd)/sqrt(nfolds)
   se_lambda = cvse[index]
   up_b = cvm[index] + se_lambda
   lambda_1se = (lambda_seq[cvm <= up_b])[1]
-  
-  
+
+
   return (list(lambda_min = lambda_min, lambda_1se = lambda_1se, cvm = cvm, cvse = cvse, lambda_seq = lambda_seq, nfeature_mat = nfeature_mat, error_mat = error_mat))
 }
 
 # Apply DAP
 apply_DAP <- function(xtrain, ytrain, xtest, ytest, lambda_seq = NULL, n_lambda = 50,  maxmin_ratio = 0.1, nfolds = 5, eps = 1e-4, m_max = 10000, myseed = 1001, prior = TRUE){
-  
+
   Xmean = colMeans(xtrain)
   xtrain <- xtrain - matrix(Xmean, nrow(xtrain), ncol(xtrain), byrow = T)
   xtest <- xtest - matrix(Xmean, nrow(xtest), ncol(xtest), byrow = T)
   out_s <- standardizeData(xtrain, ytrain, center = F)
-  
+
   ## generate lambda sequence
   l_max <- max(sqrt(colMeans(out_s$X1)^2 + colMeans(out_s$X2)^2))
   if (!is.null(lambda_seq)) {
@@ -199,21 +214,21 @@ apply_DAP <- function(xtrain, ytrain, xtest, ytest, lambda_seq = NULL, n_lambda 
       lambda_seq = exp(seq(log(l_max * maxmin_ratio), log(l_max), length.out = n_lambda))
     }else{
       n_lambda = nl
-    }  
+    }
   }else {
     lambda_seq = exp(seq(log(l_max * maxmin_ratio), log(l_max), length.out = n_lambda))
   }
   lambda_seq = sort(lambda_seq, decreasing = TRUE)
-  
+
   ####use cv to select the tuning parameter
   out.cv = cv_DAP(X = xtrain, Y = ytrain, lambda_seq = lambda_seq, gamma1 = 0, gamma2 = 0, nfolds = nfolds, rho = rho, eps = eps, m_max = m_max, myseed = myseed, prior = prior)
-  
+
   ####solve for selected tuning parameter
   out.proj = solve_DAP_C(X1 = out_s$X1, X2 = out_s$X2, lambda = out.cv$lambda_min, eps = eps, maxiter = m_max)
   V = cbind(diag(1/out_s$coef1)%*%out.proj$V[,1],diag(1/out_s$coef2)%*% out.proj$V[,2])
-  
-  ### calculate the error and corresponding number of variables 
-  ####back scaling 
+
+  ### calculate the error and corresponding number of variables
+  ####back scaling
   if (out.proj$nfeature > 0){
     ypred = classify_DAP(xtrain, ytrain, xtest, V = V, prior = prior)
     error = sum(ypred != ytest)/length(ytest)

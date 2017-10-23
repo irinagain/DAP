@@ -11,3 +11,4 @@ Imports: MASS
 LazyData: TRUE
 URL: http://github.com/irinagain/DAP
 BugReports: http://github.com/irinagain/DAP/issues
+RoxygenNote: 6.0.1
