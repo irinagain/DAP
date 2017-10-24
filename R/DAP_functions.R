@@ -86,6 +86,19 @@ solve_DAP_C <-function(X1, X2, lambda, Vinit = NULL, eps = 1e-02, maxiter = 1000
 }
 
 ####This function is used to solve optimization problem with  a sequence of lambda#####
+#' Title
+#'
+#' @param X1 
+#' @param X2 
+#' @param lambda_seq 
+#' @param eps 
+#' @param m_max 
+#' @param feature_max 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 solve_DAP_seq <- function(X1, X2, lambda_seq, eps = 1e-2, m_max = 10000, feature_max = nrow(X1) + nrow(X2)){
   p =ncol(X1)
   n_lambda = length(lambda_seq)
