@@ -27,19 +27,22 @@ library(DAP)
 #### DAP
 The function apply_DAP applies the proposed method DAP
 
-#### RDAP
-The function apply_RDAP applies RDA to the subset selected by DAP. 
-
 #### Cross Validation
 The function cv_DAP selects tuning parameter using 5-fold cross validation as default.
 
-### Not Exported
+#### Standardize original data
+The function standardizeData can scale the data matrix \eqn{X} by centering each column and scaling the diagonal element to be 1.
 
-* standardizeData
-* solve_DAP_R 
-* solve_DAP_C
-* solve_DAP_seq
-* classify_DAP
+#### solve optimization problem with  a single lambda (using C code)
+The function solve_DAP_C applies block-coordinate algorithm to solve the optimization probalem with a single lambda.
+
+#### solve optimization problem with  a sequence of lambda
+The function solve_DAP_seq solve the optimization with a sequence of lambda using solve_DAP_C.
+
+#### implement new classification rule using 2-dimensional space formed by DAP
+The function classify_DAP apply the optimal solution of DAP to perform the classification.
+
+### Not Exported
 * update_hdrda
 * predict.hdrda
 * hdrda_cv_variables
