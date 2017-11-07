@@ -29,6 +29,7 @@ standardizeData <- function(X, Y, center = T){
   return(list(X1 = X1, X2 = X2, coef1 = coef1, coef2 = coef2, Xmean = Xmean))
 }
 
+# This function won't be exported or used in the package, may be deleted later.
 # R version of block-lasso with update of norm
 # Takes scaled X1 and X2 from before
 solve_DAP_R <-function(X1, X2, lambda, Vinit = NULL, eps = 1e-02, maxiter = 10000){
@@ -65,8 +66,23 @@ solve_DAP_R <-function(X1, X2, lambda, Vinit = NULL, eps = 1e-02, maxiter = 1000
   return(list(V=V, nfeature = nfeature, iter = iter))
 }
 
-# C version of block-lasso with update of norm
-# Takes scaled X1 and X2 from before
+#' Solve Optimization Problem (C version, single lambda)
+#' C version of block-lasso with update of norm, using coordinate-decent Algorithm
+#' @param X1
+#' @param X2
+#' @param lambda
+#' @param Vinit
+#' @param eps
+#' @param maxiter
+#'
+#' @return
+#'
+#' @section Warnings:
+#' Takes scaled X1 and X2 for this function
+#'
+#' @example man/examples/solve_DAP_C
+#'
+#' @export
 solve_DAP_C <-function(X1, X2, lambda, Vinit = NULL, eps = 1e-02, maxiter = 10000){
   p = ncol(X1)
   n1 = nrow(X1)
@@ -88,12 +104,12 @@ solve_DAP_C <-function(X1, X2, lambda, Vinit = NULL, eps = 1e-02, maxiter = 1000
 ####This function is used to solve optimization problem with  a sequence of lambda#####
 #' Title
 #'
-#' @param X1 
-#' @param X2 
-#' @param lambda_seq 
-#' @param eps 
-#' @param m_max 
-#' @param feature_max 
+#' @param X1
+#' @param X2
+#' @param lambda_seq
+#' @param eps
+#' @param m_max
+#' @param feature_max
 #'
 #' @return
 #' @export
