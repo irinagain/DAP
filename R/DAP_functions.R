@@ -37,15 +37,17 @@ standardizeData <- function(X, Y, center = T){
 #' fixed value of lambda. C code is used for coding basic functions
 #' to speed up.
 #'
-#' @param X1 A matrix (n_1 by p) of group 1 data (scaled).
-#' @param X2 A matrix (n_2 by p) of group 2 data (scaled).
+#' @param X1 A matrix (\code{n_1} by \code{p}) of group 1 data
+#' (scaled).
+#' @param X2 A matrix (\code{n_2} by \code{p}) of group 2 data
+#' (scaled).
 #' @param lambda A fixed value of the tuning parameter.
 #' @param Vinit Starting point. The default is "NULL".
 #' @param eps Convergence threshold for block-coordinate decent
 #' algorithm. Each block-coordinate decent algorithm loop continuoues
 #' until the maximum iteration number exceeds \code{maxiter} or the
 #' maximum element-wise change in \eqn{V} is less than \code{eps}.
-#' Default is 1e-02.
+#' Default is 1e-4.
 #' @param maxiter Maximum number of iterations. Default is 10000.
 #'
 #' @return A list with following components:
@@ -60,7 +62,7 @@ standardizeData <- function(X, Y, center = T){
 #' @example man/examples/solve_DAP_C
 #'
 #' @export
-solve_DAP_C <-function(X1, X2, lambda, Vinit = NULL, eps = 1e-02, maxiter = 10000){
+solve_DAP_C <-function(X1, X2, lambda, Vinit = NULL, eps = 1e-4, maxiter = 10000){
   p = ncol(X1)
   n1 = nrow(X1)
   n2 = nrow(X2)
@@ -79,20 +81,40 @@ solve_DAP_C <-function(X1, X2, lambda, Vinit = NULL, eps = 1e-02, maxiter = 1000
 }
 
 ####This function is used to solve optimization problem with  a sequence of lambda#####
-#' Title
+#' Solve Optimization Problem for a sequence of lambda
 #'
-#' @param X1
-#' @param X2
-#' @param lambda_seq
-#' @param eps
-#' @param m_max
-#' @param feature_max
+#' Solving group lasso problem using block-coordinate algorithm for a
+#' sequence of lambda.
 #'
-#' @return
+#' @param X1 A matrix (\code{n_1} by p) of group 1 data (scaled).
+#' @param X2 A matrix (\code{n_2} by p) of group 2 data (scaled).
+#' @param lambda_seq A sequence of tunning parameter lambda.
+#' @param eps Convergence threshold for block-coordinate decent
+#' algorithm. Each block-coordinate decent algorithm loop continuoues
+#' until the maximum iteration number exceeds \code{maxiter} or the
+#' maximum element-wise change in \eqn{V} is less than \code{eps}.
+#' Default is 1e-4.
+#' @param m_max Maximum number of iterations. Default is 10000.
+#' @param feature_max The maximum number of features that can be
+#' selected. Default is the total sample size. Once the maximum is
+#' reached, the function will return the reasults and larger lambda
+#' values won't be applied.
+#'
+#' @return A list with the following components.
+#'        \item{V1_mat}{A matrix of the first projection vector V1
+#'        correstponding to the sequence of lambda.}
+#'        \item{V2_mat}{A matrix of the second projection vector V2
+#'        correstponding to the sequence of lambda.}
+#'        \item{lambda_seq}{The sequence of lambda that has been
+#'        applied to the data.}
+#'        \item{nfeature_vec}{A sequence of number of selected
+#'        features.}
+#'
+#' @example man/examples/solve_DAP_seq
+#'
 #' @export
 #'
-#' @examples
-solve_DAP_seq <- function(X1, X2, lambda_seq, eps = 1e-2, m_max = 10000, feature_max = nrow(X1) + nrow(X2)){
+solve_DAP_seq <- function(X1, X2, lambda_seq, eps = 1e-4, m_max = 10000, feature_max = nrow(X1) + nrow(X2)){
   p =ncol(X1)
   n_lambda = length(lambda_seq)
 
@@ -117,6 +139,23 @@ solve_DAP_seq <- function(X1, X2, lambda_seq, eps = 1e-2, m_max = 10000, feature
 }
 
 #Classify using 2-dimensional subspace formed by V
+#' Classification using projection matrix V
+#'
+#' Applying the projection matrix V into the classification procedure.
+#'
+#' @param xtrain Total training data.
+#' @param ytrain Total training label, either "1" or "2".
+#' @param xtest Test data.
+#' @param V Projection matrix.
+#' @param prior If "TRUE", the proportions for the training set will
+#' be used to adjust the classification rule. Default is "TRUE".
+#'
+#' @return Predicted class labels for the test data.
+#'
+#' @example man/examples/classify_DAP
+#'
+#' @export
+#'
 classify_DAP <- function(xtrain, ytrain, xtest, V, prior = TRUE){
   #xtrain = scale(xtrain, scale = F)
   #xtest = scale(xtest, scale = F, center = attr(xtrain, which = "scaled:center"))
@@ -139,7 +178,7 @@ classify_DAP <- function(xtrain, ytrain, xtest, V, prior = TRUE){
     return(predict_vec)
   }else{
     # Use qda from MASS for prediction
-    if (prior == T){
+    if (prior == TRUE){
       out = qda(xtrain %*% V, grouping = ytrain)
     }else{
       out = qda(xtrain %*% V, grouping = ytrain, prior = c(1/2,1/2))
@@ -151,7 +190,35 @@ classify_DAP <- function(xtrain, ytrain, xtest, V, prior = TRUE){
 }
 
 # CV using projections as before
-cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, rho = 0, gamma1 = 0, gamma2 = 0, eps = 1e-6, m_max = 1000, myseed = 1001, prior = TRUE){
+#' Cross-validation for DAP
+#'
+#' Does k-fold cross-validation for DAP.
+#'
+#' @param X Training data set. No need for standardization.
+#' @param Y Training labels, either "1" or "2".
+#' @param lambda_seq A sequence of tunning parameter, lambda.
+#' @param nfolds Set folds number for cross-validation. Default is 5.
+#' @param rho
+#' @param gamma1
+#' @param gamma2
+#' @param eps Convergence threshold for block-coordinate decent
+#' algorithm. Each block-coordinate decent algorithm loop continuoues
+#' until the maximum iteration number exceeds \code{maxiter} or the
+#' maximum element-wise change in \eqn{V} is less than \code{eps}.
+#' Default is 1e-4.
+#' @param m_max Maximum number of iterations. Default is 10000.
+#' @param myseed Seed for random spliting the data set into traininf
+#' and testing. Default seed is 1001.
+#' @param prior If "TRUE", the proportions for the training set will
+#' be used to adjust the classification rule. Default is "TRUE".
+#'
+#' @return
+#'
+#' @example man/examples/cv_DAP
+#'
+#' @export
+#'
+cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, rho = 0, gamma1 = 0, gamma2 = 0, eps = 1e-4, m_max = 1000, myseed = 1001, prior = TRUE){
 
   n = length(Y)
   n_lambda = length(lambda_seq)
