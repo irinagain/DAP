@@ -14,6 +14,8 @@
 #'     \item{Xmean}{Column mean for the matrix \eqn{X}.}
 #'
 #' @example man/examples/standardizeData_eg.R
+#'
+#' @export
 standardizeData <- function(X, Y, center = T){
   # center X
   Xmean = colMeans(X)
@@ -29,56 +31,31 @@ standardizeData <- function(X, Y, center = T){
   return(list(X1 = X1, X2 = X2, coef1 = coef1, coef2 = coef2, Xmean = Xmean))
 }
 
-# This function won't be exported or used in the package, may be deleted later.
-# R version of block-lasso with update of norm
-# Takes scaled X1 and X2 from before
-solve_DAP_R <-function(X1, X2, lambda, Vinit = NULL, eps = 1e-02, maxiter = 10000){
-  p = ncol(X1)
-  n1 = nrow(X1)
-  n2 = nrow(X2)
-  if (is.null(Vinit)){
-    V=matrix(0,p,2)
-  }else{
-    V=Vinit
-  }
-  R1 = (-X1%*%V[,1]+1)/n1
-  R2 = (-X2%*%V[,2]-1)/n2
-  error=1000
-  iter = 0
-  while ((error>eps)&(iter < maxiter)){
-    iter = iter + 1
-    error = 0
-    Vold = V
-    for (k in 1:p){
-      t = Vold[k,] + rbind(crossprod(X1[,k],R1), crossprod(X2[,k], R2))
-      normt = sqrt(sum(t^2))
-      if (normt <= lambda){
-        V[k,]=rep(0,2)
-      }else {
-        V[k,] = (1- lambda/normt)*t
-      }
-      R1 = R1 + X1[,k]*(Vold[k,1]-V[k,1])/n1
-      R2 = R2 + X2[,k]*(Vold[k,2]-V[k,2])/n2
-      error=error+sum(abs(Vold[k,]-V[k,]))
-    }
-  }
-  nfeature = sum(rowSums(abs(V))>0)
-  return(list(V=V, nfeature = nfeature, iter = iter))
-}
-
-#' Solve Optimization Problem (C version, single lambda)
-#' C version of block-lasso with update of norm, using coordinate-decent Algorithm
-#' @param X1
-#' @param X2
-#' @param lambda
-#' @param Vinit
-#' @param eps
-#' @param maxiter
+#' Solve Optimization Problem (C version, fixed lambda)
 #'
-#' @return
+#' Solving group lasso using block-coordinate decent algorithm for a
+#' fixed value of lambda. C code is used for coding basic functions
+#' to speed up.
+#'
+#' @param X1 A matrix (n_1 by p) of group 1 data (scaled).
+#' @param X2 A matrix (n_2 by p) of group 2 data (scaled).
+#' @param lambda A fixed value of the tuning parameter.
+#' @param Vinit Starting point. The default is "NULL".
+#' @param eps Convergence threshold for block-coordinate decent
+#' algorithm. Each block-coordinate decent algorithm loop continuoues
+#' until the maximum iteration number exceeds \code{maxiter} or the
+#' maximum element-wise change in \eqn{V} is less than \code{eps}.
+#' Default is 1e-02.
+#' @param maxiter Maximum number of iterations. Default is 10000.
+#'
+#' @return A list with following components:
+#'        \item{V}{The projection matrix.}
+#'        \item{nfeature}{The number of selected features.}
+#'        \item{iter}{Iteration numbers used to converge.}
 #'
 #' @section Warnings:
-#' Takes scaled X1 and X2 for this function
+#' Please take scaled X1 and X2 for this function. One can use
+#' function "standardizeData" to do so.
 #'
 #' @example man/examples/solve_DAP_C
 #'
