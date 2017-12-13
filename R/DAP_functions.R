@@ -216,7 +216,21 @@ classify_DAP <- function(xtrain, ytrain, xtest, V, prior = TRUE){
 #'
 #' @example man/examples/cv_DAP
 #'
-#' @export
+#' @export A list with following component:
+#'        \item{lambda_min}{Value of \code{lambda} corresponding to
+#'        the minimum \code{cvm}.}
+#'        \item{lambda_1se}{The largest value of \code{lambda} such
+#'        that the error is within 1 standard error of the minimum
+#'        \code{cvm}.}
+#'        \item{cvm}{The mean of k-fold cross-validation error
+#'        with respect to the sequence of \code{lambda}.}
+#'        \item{cvse}{The estimate of standard error of \code{cvm}.}
+#'        \item{lambda_seq}{The sequence of \code{lambda} used in the
+#'        fits.}
+#'        \item{nfeature_mat}{The matrix of the number of selected
+#'         features with respect to \code{lambda} sequence.}
+#'        \item{error_mat}{The matrix of the fitting errors
+#'         with respect to \code{lambda} sequence.}
 #'
 cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, rho = 0, gamma1 = 0, gamma2 = 0, eps = 1e-4, m_max = 1000, myseed = 1001, prior = TRUE){
 
@@ -271,6 +285,31 @@ cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, rho = 0, gamma1 = 0, gamma2 = 0,
 }
 
 # Apply DAP
+#' Apply DAP for binary calssification
+#'
+#' Apply sparse quadratic classification rules via linear dimension
+#' reduction (projection matrix). Meanwhile, variable selection via
+#' group lasso will be implemented. Can deal with high-dimensional
+#' binary classification problem.
+#'
+#' @param xtrain Total training data.
+#' @param ytrain Total training label, either "1" or "2".
+#' @param xtest Test data.
+#' @param ytest
+#' @param lambda_seq
+#' @param n_lambda
+#' @param maxmin_ratio
+#' @param nfolds
+#' @param eps Convergence threshold for block-coordinate decent
+#' algorithm. Each block-coordinate decent algorithm loop continuoues
+#' until the maximum iteration number exceeds \code{maxiter} or the
+#' maximum element-wise change in \eqn{V} is less than \code{eps}.
+#' Default is 1e-4.
+#' @param m_max Maximum number of iterations. Default is 10000.
+#' @param myseed Seed for random spliting the data set into traininf
+#' and testing. Default seed is 1001.
+#' @param prior If "TRUE", the proportions for the training set will
+#' be used to adjust the classification rule. Default is "TRUE".
 apply_DAP <- function(xtrain, ytrain, xtest, ytest, lambda_seq = NULL, n_lambda = 50,  maxmin_ratio = 0.1, nfolds = 5, eps = 1e-4, m_max = 10000, myseed = 1001, prior = TRUE){
 
   Xmean = colMeans(xtrain)
