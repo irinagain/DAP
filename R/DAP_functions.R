@@ -212,11 +212,7 @@ classify_DAP <- function(xtrain, ytrain, xtest, V, prior = TRUE){
 #' @param prior If "TRUE", the proportions for the training set will
 #' be used to adjust the classification rule. Default is "TRUE".
 #'
-#' @return
-#'
-#' @example man/examples/cv_DAP
-#'
-#' @export A list with following component:
+#' @return A list with following component:
 #'        \item{lambda_min}{Value of \code{lambda} corresponding to
 #'        the minimum \code{cvm}.}
 #'        \item{lambda_1se}{The largest value of \code{lambda} such
@@ -232,6 +228,10 @@ classify_DAP <- function(xtrain, ytrain, xtest, V, prior = TRUE){
 #'        \item{error_mat}{The matrix of the fitting errors
 #'         with respect to \code{lambda} sequence.}
 #'
+#' @example man/examples/cv_DAP
+#'
+#' @export 
+#' 
 cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, rho = 0, gamma1 = 0, gamma2 = 0, eps = 1e-4, m_max = 1000, myseed = 1001, prior = TRUE){
 
   n = length(Y)
@@ -284,8 +284,8 @@ cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, rho = 0, gamma1 = 0, gamma2 = 0,
   return (list(lambda_min = lambda_min, lambda_1se = lambda_1se, cvm = cvm, cvse = cvse, lambda_seq = lambda_seq, nfeature_mat = nfeature_mat, error_mat = error_mat))
 }
 
-# Apply DAP
-#' Apply DAP for binary calssification
+
+#' Apply DAP for binary calssification 
 #'
 #' Apply sparse quadratic classification rules via linear dimension
 #' reduction (projection matrix). Meanwhile, variable selection via
@@ -295,11 +295,16 @@ cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, rho = 0, gamma1 = 0, gamma2 = 0,
 #' @param xtrain Total training data.
 #' @param ytrain Total training label, either "1" or "2".
 #' @param xtest Test data.
-#' @param ytest
-#' @param lambda_seq
-#' @param n_lambda
-#' @param maxmin_ratio
-#' @param nfolds
+#' @param ytest Test data label, either "1" or "2". Once it's provided,
+#' this function will return a misclassification error rate on the test set;
+#' otherwise, the function will return predicted labels for the test set. 
+#' Default is NULL.
+#' @param lambda_seq A sequence of tunning parameter, lambda. Deafult is NULL.
+#' @param n_lambda Length of lambda_seq, used for generating lambda_seq if it's
+#' NULL. Default is 50.
+#' @param maxmin_ratio A ratio to control the minimum lambda in lambda_seq.
+#' Default is 0.1.
+#' @param nfolds Set folds number for cross-validation. Default is 5.
 #' @param eps Convergence threshold for block-coordinate decent
 #' algorithm. Each block-coordinate decent algorithm loop continuoues
 #' until the maximum iteration number exceeds \code{maxiter} or the
@@ -310,7 +315,21 @@ cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, rho = 0, gamma1 = 0, gamma2 = 0,
 #' and testing. Default seed is 1001.
 #' @param prior If "TRUE", the proportions for the training set will
 #' be used to adjust the classification rule. Default is "TRUE".
-apply_DAP <- function(xtrain, ytrain, xtest, ytest, lambda_seq = NULL, n_lambda = 50,  maxmin_ratio = 0.1, nfolds = 5, eps = 1e-4, m_max = 10000, myseed = 1001, prior = TRUE){
+#' 
+#' @return A list as below.
+#'        \item{error}{ Misclassification error rate if ytest is provided.}
+#'        \item{ypred}{predicted label on the test set if ytest is NULL.}
+#'        \item{features}{Number of selected features.}
+#'        \item{feature_id}{Index of selected features.}
+#' @details If no feature is selected by DAP, no matter ytest is NULL or 
+#' provided, the function will return error = 0.5 and no ypred. In this case,
+#' the classifier is no better than randomly guessing.
+#' 
+#' @example man/examples/apply_DAP
+#' 
+#' @export
+#' 
+apply_DAP <- function(xtrain, ytrain, xtest, ytest = NULL, lambda_seq = NULL, n_lambda = 50,  maxmin_ratio = 0.1, nfolds = 5, eps = 1e-4, m_max = 10000, myseed = 1001, prior = TRUE){
 
   Xmean = colMeans(xtrain)
   xtrain <- xtrain - matrix(Xmean, nrow(xtrain), ncol(xtrain), byrow = T)
@@ -343,8 +362,13 @@ apply_DAP <- function(xtrain, ytrain, xtest, ytest, lambda_seq = NULL, n_lambda 
   ####back scaling
   if (out.proj$nfeature > 0){
     ypred = classify_DAP(xtrain, ytrain, xtest, V = V, prior = prior)
-    error = sum(ypred != ytest)/length(ytest)
-    return(list(error = error, features = out.proj$nfeature, features_id = c(1:ncol(xtrain))[rowSums(abs(V)) != 0]))
+    if (!is.null(ytest))
+    {
+      error = sum(ypred != ytest)/length(ytest)
+      return(list(error = error, features = out.proj$nfeature, features_id = c(1:ncol(xtrain))[rowSums(abs(V)) != 0]))
+    }else{
+      return(list(ypred = ypred, features = out.proj$nfeature, features_id = c(1:ncol(xtrain))[rowSums(abs(V)) != 0]))
+    }
   }else{
     return(list(error = 0.5, features = 0, features_id = NA))
   }
