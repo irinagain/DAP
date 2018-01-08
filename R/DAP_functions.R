@@ -198,9 +198,6 @@ classify_DAP <- function(xtrain, ytrain, xtest, V, prior = TRUE){
 #' @param Y Training labels, either "1" or "2".
 #' @param lambda_seq A sequence of tunning parameter, lambda.
 #' @param nfolds Set folds number for cross-validation. Default is 5.
-#' @param rho
-#' @param gamma1
-#' @param gamma2
 #' @param eps Convergence threshold for block-coordinate decent
 #' algorithm. Each block-coordinate decent algorithm loop continuoues
 #' until the maximum iteration number exceeds \code{maxiter} or the
@@ -232,7 +229,7 @@ classify_DAP <- function(xtrain, ytrain, xtest, V, prior = TRUE){
 #'
 #' @export 
 #' 
-cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, rho = 0, gamma1 = 0, gamma2 = 0, eps = 1e-4, m_max = 1000, myseed = 1001, prior = TRUE){
+cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, eps = 1e-4, m_max = 1000, myseed = 1001, prior = TRUE){
 
   n = length(Y)
   n_lambda = length(lambda_seq)
@@ -352,7 +349,7 @@ apply_DAP <- function(xtrain, ytrain, xtest, ytest = NULL, lambda_seq = NULL, n_
   lambda_seq = sort(lambda_seq, decreasing = TRUE)
 
   ####use cv to select the tuning parameter
-  out.cv = cv_DAP(X = xtrain, Y = ytrain, lambda_seq = lambda_seq, gamma1 = 0, gamma2 = 0, nfolds = nfolds, rho = rho, eps = eps, m_max = m_max, myseed = myseed, prior = prior)
+  out.cv = cv_DAP(X = xtrain, Y = ytrain, lambda_seq = lambda_seq, nfolds = nfolds, eps = eps, m_max = m_max, myseed = myseed, prior = prior)
 
   ####solve for selected tuning parameter
   out.proj = solve_DAP_C(X1 = out_s$X1, X2 = out_s$X2, lambda = out.cv$lambda_min, eps = eps, maxiter = m_max)
