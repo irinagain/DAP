@@ -28,19 +28,13 @@ default is 1e-4.}
 }
 \value{
 A list of
-       \item{lambda_min}{Value of \code{lambda} corresponding to the minimum error rate in \code{cvm}.}
-       \item{lambda_1se}{The largest value of \code{lambda} such
-       that the correspondig error is within 1 standard error of the minimum error in
-       \code{cvm}.}
-       \item{cvm}{The mean of k-fold cross-validation error
-       with respect to the sequence of \code{lambda}.}
-       \item{cvse}{The estimate of standard error of \code{cvm}.}
-       \item{lambda_seq}{The sequence of \code{lambda} used in the
-       fits.}
-       \item{nfeature_mat}{The matrix of the number of selected
-        features with respect to \code{lambda} sequence.}
-       \item{error_mat}{The matrix of the fitting errors
-        with respect to \code{lambda} sequence.}
+        \item{lambda_seq}{The sequence of tuning parameters used.}
+       \item{cvm}{The mean cross-validated error rate - a vector of length \code{length(lambda_seq)}}
+       \item{cvse}{The estimated standard error vector corresponding to \code{cvm}.}
+       \item{lambda_min}{Value of tuning parameter corresponding to the minimum in \code{cvm}.}
+       \item{lambda_1se}{The largest value of tuning parameter such that the correspondig error is within 1 standard error of the minimum in \code{cvm}.}
+       \item{nfeature_mat}{A \code{nfolds} x \code{length(lambda_seq)} matrix of the number of selected features.}
+       \item{error_mat}{A \code{nfolds} x \code{length(lambda_seq)} matrix of the error rates.}
 }
 \description{
 Chooses optimal tuning parameter lambda for DAP based on the k-fold cross-validation to minimize the misclassification error rate
