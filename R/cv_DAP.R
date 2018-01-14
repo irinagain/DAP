@@ -2,8 +2,8 @@
 #'
 #' Does k-fold cross-validation for DAP.
 #'
-#' @param X Training data set. No need for standardization.
-#' @param Y Training labels, either "1" or "2".
+#' @param X A n x p training dataset; n observations on the rows and p features on the columns.
+#' @param Y A n vector of training group labels, either 1 or 2.
 #' @param lambda_seq A sequence of tunning parameter, lambda.
 #' @param nfolds Set folds number for cross-validation. Default is 5.
 #' @param eps Convergence threshold for block-coordinate decent
