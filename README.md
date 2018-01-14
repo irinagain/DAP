@@ -4,7 +4,7 @@ The R package `DAP` provides tools for Discriminant analysis via projections, wh
 
 ## Installation
 
-You can install the `DAP` from
+You can install `DAP` from
 [Github](https://github.com/irinagain/DAP).
 
 ```s
