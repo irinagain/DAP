@@ -4,9 +4,7 @@ The R package `DAP` provides tools for high-dimensional binary classification in
 
 ## Installation
 
-You can install `DAP` from
-[Github](https://github.com/irinagain/DAP).
-
+To download the latest version from Github, type
 ```s
 install.packages("DAP")
 devtools::install_github("irinagain/DAP")
@@ -43,13 +41,5 @@ The function `solve_DAP_seq` solves the optimization problem for a sequence of l
 #### implement new classification rule using 2-dimensional space formed by DAP
 The function `classify_DAP` performs the classification based on found solution.
 
-### Not Exported
-* update_hdrda
-* predict.hdrda
-* hdrda_cv_variables
-* quadform
-* apply_hdrda_full
-
 ## License
-
 This package is free and open source software, licensed under GPL (>=2).
