@@ -1,17 +1,17 @@
 #' Standardize the data
 #'
-#' Given matrix \eqn{X} and class-indicator \eqn{Y}, the following function centers \eqn{X}, and then forms \eqn{X1} and \eqn{X2} which are scaled, as well as coefficients for back-scaling.
+#' Given matrix \code{X} with corresponding class labels in \code{Y}, the function column-centers \code{X}, divides it into two submatrices corresponding to each class, and then scales the columns of each submatrix to have eucledean norm equal to one.
 #'
-#' @param X A n by p matrix of n observations with p measurements per each.
-#' @param Y The class-indicator denoting a binary label for each observation.
-#' @param center wheather \eqn{X} will be centered or not. The default is "TURE".
+#' @param X A n x p training dataset; n observations on the rows and p features on the columns.
+#' @param Y A n vector of training group labels, either 1 or 2.
+#' @param center A logical indicating whether \code{X} should be centered, the default is TRUE.
 #'
-#' @return A list with components:
-#'     \item{X1}{Standardized observations labeled in group 1.}
-#'     \item{X2}{Standardized observations labeled in group 2.}
-#'     \item{coef1}{Coefficient of \eqn{X1} for back-scaling.}
-#'     \item{coef2}{Coefficient of \eqn{X2} for back-scaling.}
-#'     \item{Xmean}{Column mean for the matrix \eqn{X}.}
+#' @return A list of
+#'     \item{X1}{A n1 x p standardized matrix with observations from group 1.}
+#'     \item{X2}{A n2 x p standardized matrix with observations from group 1.}
+#'     \item{coef1}{Back-scaling coefficients for \code{X1}.}
+#'     \item{coef2}{Back-scaling coefficients for \code{X2}.}
+#'     \item{Xmean}{Column means of the matrix \code{X} before centering.}
 #'
 #' @example man/examples/standardizeData_eg.R
 #'
