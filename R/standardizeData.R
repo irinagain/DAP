@@ -8,7 +8,7 @@
 #'
 #' @return A list of
 #'     \item{X1}{A n1 x p standardized matrix with observations from group 1.}
-#'     \item{X2}{A n2 x p standardized matrix with observations from group 1.}
+#'     \item{X2}{A n2 x p standardized matrix with observations from group 2.}
 #'     \item{coef1}{Back-scaling coefficients for \code{X1}.}
 #'     \item{coef2}{Back-scaling coefficients for \code{X2}.}
 #'     \item{Xmean}{Column means of the matrix \code{X} before centering.}
