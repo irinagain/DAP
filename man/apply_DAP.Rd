@@ -2,65 +2,54 @@
 % Please edit documentation in R/apply_DAP.R
 \name{apply_DAP}
 \alias{apply_DAP}
-\title{Apply DAP for binary calssification}
+\title{Apply DAP for binary classification}
 \usage{
 apply_DAP(xtrain, ytrain, xtest, ytest = NULL, lambda_seq = NULL,
   n_lambda = 50, maxmin_ratio = 0.1, nfolds = 5, eps = 1e-04,
   m_max = 10000, myseed = 1001, prior = TRUE)
 }
 \arguments{
-\item{xtrain}{Total training data.}
+\item{xtrain}{A n x p training dataset; n observations on the rows and p features on the columns.}
 
-\item{ytrain}{Total training label, either "1" or "2".}
+\item{ytrain}{A n vector of training group labels, either 1 or 2.}
 
-\item{xtest}{Test data.}
+\item{xtest}{A m x p testing dataset; ntest observations on the rows and p features on the columns.}
 
-\item{ytest}{Test data label, either "1" or "2". Once it's provided,
-this function will return a misclassification error rate on the test set;
-otherwise, the function will return predicted labels for the test set. 
-Default is NULL.}
+\item{ytest}{An optional m vector of testing group labels, either 1 or 2. If supplied,
+the function returns misclassification error rate;
+if \code{NULL}, the function returns predicted labels for \code{xtest}. 
+Default is \code{NULL}.}
 
-\item{lambda_seq}{A sequence of tunning parameter, lambda. Deafult is NULL.}
+\item{lambda_seq}{An optional sequence of tunning parameters lambda. Deafult is \code{NULL}, and the function generates its own sequence.}
 
-\item{n_lambda}{Length of lambda_seq, used for generating lambda_seq if it's
-NULL. Default is 50.}
+\item{n_lambda}{Number of lambda values, the default is 50.}
 
-\item{maxmin_ratio}{A ratio to control the minimum lambda in lambda_seq.
-Default is 0.1.}
+\item{maxmin_ratio}{Smallest value for lambda, as a fraction of maximal value for which all coefficients are zero. The default is 0.1.}
 
-\item{nfolds}{Set folds number for cross-validation. Default is 5.}
+\item{nfolds}{Number of folds for cross-validation, the default is 5.}
 
-\item{eps}{Convergence threshold for block-coordinate decent
-algorithm. Each block-coordinate decent algorithm loop continuoues
-until the maximum iteration number exceeds \code{maxiter} or the
-maximum element-wise change in \eqn{V} is less than \code{eps}.
-Default is 1e-4.}
+\item{eps}{Convergence threshold for the block-coordinate decent
+algorithm based on the maximum element-wise change in \eqn{V}. The
+default is 1e-4.}
 
-\item{m_max}{Maximum number of iterations. Default is 10000.}
+\item{m_max}{Maximum number of iterations, the default is 10000.}
 
-\item{myseed}{Seed for random spliting the data set into traininf
-and testing. Default seed is 1001.}
+\item{myseed}{Optional specification of random seed for generating the folds, the default value is 1001.}
 
-\item{prior}{If "TRUE", the proportions for the training set will
-be used to adjust the classification rule. Default is "TRUE".}
+\item{prior}{A logical indicating whether to put larger weights to the groups of larger size; the default value is \code{TRUE}.}
 }
 \value{
-A list as below.
-       \item{error}{ Misclassification error rate if ytest is provided.}
-       \item{ypred}{predicted label on the test set if ytest is NULL.}
+A list with
+       \item{error}{Misclassification error rate (if \code{ytest} is provided).}
+       \item{ypred}{Predicted label on the test set (if \code{ytest} is \code{NULL}).}
        \item{features}{Number of selected features.}
        \item{feature_id}{Index of selected features.}
 }
 \description{
-Apply sparse quadratic classification rules via linear dimension
-reduction (projection matrix). Meanwhile, variable selection via
-group lasso will be implemented. Can deal with high-dimensional
-binary classification problem.
+Applies Discriminant Analysis via Projections to perform binary classification on the test dataset based on the training data.
 }
 \details{
-If no feature is selected by DAP, no matter ytest is NULL or 
-provided, the function will return error = 0.5 and no ypred. In this case,
-the classifier is no better than randomly guessing.
+If no feature is selected by DAP, the function will return \code{error} of 0.5 and no \code{ypred}, indicating that the classifier is no better than random guessing.
 }
 \examples{
 ## This is an example for apply_DAP

@@ -7,16 +7,15 @@
 classify_DAP(xtrain, ytrain, xtest, V, prior = TRUE)
 }
 \arguments{
-\item{xtrain}{Total training data.}
+\item{xtrain}{A n x p training dataset; n observations on the rows and p features on the columns.}
 
-\item{ytrain}{Total training label, either "1" or "2".}
+\item{ytrain}{A n vector of training group labels, either 1 or 2.}
 
-\item{xtest}{Test data.}
+\item{xtest}{A m x p testing dataset; ntest observations on the rows and p features on the columns.}
 
-\item{V}{Projection matrix.}
+\item{V}{A p x 2 projection matrix.}
 
-\item{prior}{If "TRUE", the proportions for the training set will
-be used to adjust the classification rule. Default is "TRUE".}
+\item{prior}{A logical indicating whether to put larger weights to the groups of larger size; the default value is \code{TRUE}.}
 }
 \value{
 Predicted class labels for the test data.

@@ -1,18 +1,15 @@
-#' Apply DAP for binary calssification 
+#' Apply DAP for binary classification 
 #'
-#' Apply sparse quadratic classification rules via linear dimension
-#' reduction (projection matrix). Meanwhile, variable selection via
-#' group lasso will be implemented. Can deal with high-dimensional
-#' binary classification problem.
+#' Applies Discriminant Analysis via Projections to perform binary classification on the test dataset based on the training data. 
 #'
 #' @param xtrain A n x p training dataset; n observations on the rows and p features on the columns.
-#' @param ytrain A n vector of training group labels, either "1" or "2".
+#' @param ytrain A n vector of training group labels, either 1 or 2.
 #' @param xtest A m x p testing dataset; ntest observations on the rows and p features on the columns.
-#' @param ytest An optional m vector of testing group labels, either "1" or "2". If supplied,
-#' the function returns misclassification error rate on the test set;
-#' if NULL, the function returns predicted labels for the test set. 
-#' Default is NULL.
-#' @param lambda_seq An optional sequence of tunning parameters lambda. Deafult is NULL, and the function generates its own sequence.
+#' @param ytest An optional m vector of testing group labels, either 1 or 2. If supplied,
+#' the function returns misclassification error rate;
+#' if \code{NULL}, the function returns predicted labels for \code{xtest}. 
+#' Default is \code{NULL}.
+#' @param lambda_seq An optional sequence of tunning parameters lambda. Deafult is \code{NULL}, and the function generates its own sequence.
 #' @param n_lambda Number of lambda values, the default is 50.
 #' @param maxmin_ratio Smallest value for lambda, as a fraction of maximal value for which all coefficients are zero. The default is 0.1.
 #' @param nfolds Number of folds for cross-validation, the default is 5.
@@ -21,14 +18,14 @@
 #' default is 1e-4.
 #' @param m_max Maximum number of iterations, the default is 10000.
 #' @param myseed Optional specification of random seed for generating the folds, the default value is 1001.
-#' @param prior A logical indicating whether to put larger weights to the groups of larger size; the default value is "TRUE".
+#' @param prior A logical indicating whether to put larger weights to the groups of larger size; the default value is \code{TRUE}.
 #' 
 #' @return A list with
-#'        \item{error}{Misclassification error rate (if \eqn{ytest} is provided).}
-#'        \item{ypred}{Predicted label on the test set (if \eqn{ytest} is NULL).}
+#'        \item{error}{Misclassification error rate (if \code{ytest} is provided).}
+#'        \item{ypred}{Predicted label on the test set (if \code{ytest} is \code{NULL}).}
 #'        \item{features}{Number of selected features.}
 #'        \item{feature_id}{Index of selected features.}
-#' @details If no feature is selected by DAP, the function will return error = 0.5 and no ypred, indicating that the classifier is no better than random guessing.
+#' @details If no feature is selected by DAP, the function will return \code{error} of 0.5 and no \code{ypred}, indicating that the classifier is no better than random guessing.
 #' 
 #' @example man/examples/apply_DAP_eg.R
 #' 
