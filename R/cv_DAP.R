@@ -1,27 +1,22 @@
 #' Cross-validation for DAP
 #'
-#' Does k-fold cross-validation for DAP.
+#' Chooses optimal tuning parameter lambda for DAP based on the k-fold cross-validation to minimize the misclassification error rate
 #'
-#' @param X Training data set. No need for standardization.
-#' @param Y Training labels, either "1" or "2".
-#' @param lambda_seq A sequence of tunning parameter, lambda.
-#' @param nfolds Set folds number for cross-validation. Default is 5.
-#' @param eps Convergence threshold for block-coordinate decent
-#' algorithm. Each block-coordinate decent algorithm loop continuoues
-#' until the maximum iteration number exceeds \code{maxiter} or the
-#' maximum element-wise change in \eqn{V} is less than \code{eps}.
-#' Default is 1e-4.
-#' @param m_max Maximum number of iterations. Default is 10000.
-#' @param myseed Seed for random spliting the data set into traininf
-#' and testing. Default seed is 1001.
-#' @param prior If "TRUE", the proportions for the training set will
-#' be used to adjust the classification rule. Default is "TRUE".
+#' @param X A n x p training dataset; n observations on the rows and p features on the columns.
+#' @param Y A n vector of training group labels, either 1 or 2.
+#' @param lambda_seq A sequence of tuning parameters to choose from.
+#' @param nfolds Number of folds for cross-validation, the default is 5.
+#' @param eps Convergence threshold for the block-coordinate decent
+#' algorithm based on the maximum element-wise change in \eqn{V}. The
+#' default is 1e-4.
+#' @param m_max Maximum number of iterations, the default is 10000.
+#' @param myseed Optional specification of random seed for generating the folds, the default value is 1001.
+#' @param prior A logical indicating whether to put larger weights to the groups of larger size; the default value is \code{TRUE}.
 #'
-#' @return A list with following component:
-#'        \item{lambda_min}{Value of \code{lambda} corresponding to
-#'        the minimum \code{cvm}.}
+#' @return A list of
+#'        \item{lambda_min}{Value of \code{lambda} corresponding to the minimum error rate in \code{cvm}.}
 #'        \item{lambda_1se}{The largest value of \code{lambda} such
-#'        that the error is within 1 standard error of the minimum
+#'        that the correspondig error is within 1 standard error of the minimum error in
 #'        \code{cvm}.}
 #'        \item{cvm}{The mean of k-fold cross-validation error
 #'        with respect to the sequence of \code{lambda}.}
@@ -43,7 +38,6 @@ cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, eps = 1e-4, m_max = 1000, myseed
   n_lambda = length(lambda_seq)
   
   error_mat = matrix(0.5, nfolds, n_lambda)
-  #cor_mat = matrix(0, nfolds, n_lambda)
   nfeature_mat = matrix(NA, nfolds, n_lambda)
   
   ####random set split the whole data set into k folds corresponding to n1 and n2

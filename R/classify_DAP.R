@@ -1,10 +1,10 @@
-#' Classification using projection matrix V
+#' Classification via DAP
 #'
-#' Applying the projection matrix V into the classification procedure.
+#' Classify observations in the test set using the supplied matrix V and the training data.
 #'
 #' @param xtrain A n x p training dataset; n observations on the rows and p features on the columns.
 #' @param ytrain A n vector of training group labels, either 1 or 2.
-#' @param xtest A m x p testing dataset; ntest observations on the rows and p features on the columns.
+#' @param xtest A m x p testing dataset; m observations on the rows and p features on the columns.
 #' @param V A p x 2 projection matrix.
 #' @param prior A logical indicating whether to put larger weights to the groups of larger size; the default value is \code{TRUE}.
 #'
@@ -15,8 +15,6 @@
 #' @export
 #'
 classify_DAP <- function(xtrain, ytrain, xtest, V, prior = TRUE){
-  #xtrain = scale(xtrain, scale = F)
-  #xtest = scale(xtest, scale = F, center = attr(xtrain, which = "scaled:center"))
   Vsvd <- svd(V)$d
   ## Only for 2 column case for now, and 2 classes
   if ((min(Vsvd)<1e-6)|(length(Vsvd)==1)){

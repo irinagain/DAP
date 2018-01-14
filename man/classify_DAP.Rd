@@ -2,7 +2,7 @@
 % Please edit documentation in R/classify_DAP.R
 \name{classify_DAP}
 \alias{classify_DAP}
-\title{Classification using projection matrix V}
+\title{Classification via DAP}
 \usage{
 classify_DAP(xtrain, ytrain, xtest, V, prior = TRUE)
 }
@@ -11,7 +11,7 @@ classify_DAP(xtrain, ytrain, xtest, V, prior = TRUE)
 
 \item{ytrain}{A n vector of training group labels, either 1 or 2.}
 
-\item{xtest}{A m x p testing dataset; ntest observations on the rows and p features on the columns.}
+\item{xtest}{A m x p testing dataset; m observations on the rows and p features on the columns.}
 
 \item{V}{A p x 2 projection matrix.}
 
@@ -21,7 +21,7 @@ classify_DAP(xtrain, ytrain, xtest, V, prior = TRUE)
 Predicted class labels for the test data.
 }
 \description{
-Applying the projection matrix V into the classification procedure.
+Classify observations in the test set using the supplied matrix V and the training data.
 }
 \examples{
 ## This is an example for classify_DAP

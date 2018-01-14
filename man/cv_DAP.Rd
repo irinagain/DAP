@@ -8,34 +8,29 @@ cv_DAP(X, Y, lambda_seq, nfolds = 5, eps = 1e-04, m_max = 1000,
   myseed = 1001, prior = TRUE)
 }
 \arguments{
-\item{X}{Training data set. No need for standardization.}
+\item{X}{A n x p training dataset; n observations on the rows and p features on the columns.}
 
-\item{Y}{Training labels, either "1" or "2".}
+\item{Y}{A n vector of training group labels, either 1 or 2.}
 
-\item{lambda_seq}{A sequence of tunning parameter, lambda.}
+\item{lambda_seq}{A sequence of tuning parameters to choose from.}
 
-\item{nfolds}{Set folds number for cross-validation. Default is 5.}
+\item{nfolds}{Number of folds for cross-validation, the default is 5.}
 
-\item{eps}{Convergence threshold for block-coordinate decent
-algorithm. Each block-coordinate decent algorithm loop continuoues
-until the maximum iteration number exceeds \code{maxiter} or the
-maximum element-wise change in \eqn{V} is less than \code{eps}.
-Default is 1e-4.}
+\item{eps}{Convergence threshold for the block-coordinate decent
+algorithm based on the maximum element-wise change in \eqn{V}. The
+default is 1e-4.}
 
-\item{m_max}{Maximum number of iterations. Default is 10000.}
+\item{m_max}{Maximum number of iterations, the default is 10000.}
 
-\item{myseed}{Seed for random spliting the data set into traininf
-and testing. Default seed is 1001.}
+\item{myseed}{Optional specification of random seed for generating the folds, the default value is 1001.}
 
-\item{prior}{If "TRUE", the proportions for the training set will
-be used to adjust the classification rule. Default is "TRUE".}
+\item{prior}{A logical indicating whether to put larger weights to the groups of larger size; the default value is \code{TRUE}.}
 }
 \value{
-A list with following component:
-       \item{lambda_min}{Value of \code{lambda} corresponding to
-       the minimum \code{cvm}.}
+A list of
+       \item{lambda_min}{Value of \code{lambda} corresponding to the minimum error rate in \code{cvm}.}
        \item{lambda_1se}{The largest value of \code{lambda} such
-       that the error is within 1 standard error of the minimum
+       that the correspondig error is within 1 standard error of the minimum error in
        \code{cvm}.}
        \item{cvm}{The mean of k-fold cross-validation error
        with respect to the sequence of \code{lambda}.}
@@ -48,7 +43,7 @@ A list with following component:
         with respect to \code{lambda} sequence.}
 }
 \description{
-Does k-fold cross-validation for DAP.
+Chooses optimal tuning parameter lambda for DAP based on the k-fold cross-validation to minimize the misclassification error rate
 }
 \examples{
 ## This is an example for cv_DAP

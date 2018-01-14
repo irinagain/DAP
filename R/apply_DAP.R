@@ -4,7 +4,7 @@
 #'
 #' @param xtrain A n x p training dataset; n observations on the rows and p features on the columns.
 #' @param ytrain A n vector of training group labels, either 1 or 2.
-#' @param xtest A m x p testing dataset; ntest observations on the rows and p features on the columns.
+#' @param xtest A m x p testing dataset; m observations on the rows and p features on the columns.
 #' @param ytest An optional m vector of testing group labels, either 1 or 2. If supplied,
 #' the function returns misclassification error rate;
 #' if \code{NULL}, the function returns predicted labels for \code{xtest}. 
@@ -20,9 +20,9 @@
 #' @param myseed Optional specification of random seed for generating the folds, the default value is 1001.
 #' @param prior A logical indicating whether to put larger weights to the groups of larger size; the default value is \code{TRUE}.
 #' 
-#' @return A list with
+#' @return A list of
 #'        \item{error}{Misclassification error rate (if \code{ytest} is provided).}
-#'        \item{ypred}{Predicted label on the test set (if \code{ytest} is \code{NULL}).}
+#'        \item{ypred}{Predicted labels on the test set (if \code{ytest} is \code{NULL}).}
 #'        \item{features}{Number of selected features.}
 #'        \item{feature_id}{Index of selected features.}
 #' @details If no feature is selected by DAP, the function will return \code{error} of 0.5 and no \code{ypred}, indicating that the classifier is no better than random guessing.

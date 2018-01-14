@@ -13,7 +13,7 @@ apply_DAP(xtrain, ytrain, xtest, ytest = NULL, lambda_seq = NULL,
 
 \item{ytrain}{A n vector of training group labels, either 1 or 2.}
 
-\item{xtest}{A m x p testing dataset; ntest observations on the rows and p features on the columns.}
+\item{xtest}{A m x p testing dataset; m observations on the rows and p features on the columns.}
 
 \item{ytest}{An optional m vector of testing group labels, either 1 or 2. If supplied,
 the function returns misclassification error rate;
@@ -39,9 +39,9 @@ default is 1e-4.}
 \item{prior}{A logical indicating whether to put larger weights to the groups of larger size; the default value is \code{TRUE}.}
 }
 \value{
-A list with
+A list of
        \item{error}{Misclassification error rate (if \code{ytest} is provided).}
-       \item{ypred}{Predicted label on the test set (if \code{ytest} is \code{NULL}).}
+       \item{ypred}{Predicted labels on the test set (if \code{ytest} is \code{NULL}).}
        \item{features}{Number of selected features.}
        \item{feature_id}{Index of selected features.}
 }
