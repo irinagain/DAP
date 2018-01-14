@@ -1,18 +1,12 @@
-####This function is used to solve optimization problem with  a sequence of lambda#####
-#' Solve Optimization Problem for a sequence of lambda
+#' Solves DAP optimization problem for a given sequence of lambda values
 #'
-#' Solving group lasso problem using block-coordinate algorithm for a
-#' sequence of lambda.
+#' Uses block-coordinate descent algorithm with warm initializations, starts with the maximal supplied lambda value.
 #'
-#' @param X1 A matrix (\code{n_1} by p) of group 1 data (scaled).
-#' @param X2 A matrix (\code{n_2} by p) of group 2 data (scaled).
-#' @param lambda_seq A sequence of tunning parameter lambda.
-#' @param eps Convergence threshold for block-coordinate decent
-#' algorithm. Each block-coordinate decent algorithm loop continuoues
-#' until the maximum iteration number exceeds \code{maxiter} or the
-#' maximum element-wise change in \eqn{V} is less than \code{eps}.
-#' Default is 1e-4.
-#' @param m_max Maximum number of iterations. Default is 10000.
+#' @param X1 A n1 x p matrix of group 1 data (scaled).
+#' @param X2 A n2 x p matrix of group 2 data (scaled).
+#' @param lambda_seq A supplied sequence of tunning parameters.
+#' @param eps Convergence threshold for the block-coordinate decent algorithm based on the maximum element-wise change in \eqn{V}. The default is 1e-4.
+#' @param m_max Maximum number of iterations, the default is 10000.
 #' @param feature_max The maximum number of features that can be
 #' selected. Default is the total sample size. Once the maximum is
 #' reached, the function will return the reasults and larger lambda
