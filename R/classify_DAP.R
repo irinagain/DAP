@@ -15,22 +15,22 @@
 #' @export
 #'
 classify_DAP <- function(xtrain, ytrain, xtest, V, prior = TRUE){
-  Vsvd <- svd(V)$d
+  Vsvd = svd(V)$d
   ## Only for 2 column case for now, and 2 classes
-  if ((min(Vsvd)<1e-6)|(length(Vsvd)==1)){
-    V <- V[,1, drop=F]
-    trainproj <- xtrain%*%V
-    testproj <- xtest %*%V
-    Omega1 <- 1/var(trainproj[ytrain==1,])
-    Omega2 <- 1/var(trainproj[ytrain==2,])
-    mu1 <- mean(trainproj[ytrain==1,])
-    mu2 <- mean(trainproj[ytrain==2,])
-    predict_vec <- rep(2,nrow(xtest))
-    difference <- diag(tcrossprod(testproj)*(Omega1 - Omega2))-2*as.vector(testproj*(Omega1*mu1 - Omega2*mu2))-mu2^2*Omega2+mu1^2*Omega1-log(Omega1)+log(Omega2)
+  if ((min(Vsvd) < 1e-6) | (length(Vsvd) == 1)){
+    V = V[ , 1, drop = F]
+    trainproj = xtrain %*% V
+    testproj = xtest %*% V
+    Omega1 = 1 / var(trainproj[ytrain == 1, ])
+    Omega2 = 1 / var(trainproj[ytrain == 2, ])
+    mu1 = mean(trainproj[ytrain == 1, ])
+    mu2 = mean(trainproj[ytrain == 2, ])
+    predict_vec = rep(2, nrow(xtest))
+    difference = diag(tcrossprod(testproj) * (Omega1 - Omega2)) - 2 * as.vector(testproj * (Omega1 * mu1 - Omega2 * mu2)) - mu2^2 * Omega2 + mu1^2 * Omega1 - log(Omega1) + log(Omega2)
     if (prior == TRUE){
-      difference <- difference - 2*log(sum(ytrain == 1)/sum(ytrain == 2))
+      difference = difference - 2*log(sum(ytrain == 1)/sum(ytrain == 2))
     }
-    predict_vec[difference < 0] <- 1
+    predict_vec[difference < 0] = 1
     return(predict_vec)
   }else{
     # Use qda from MASS for prediction

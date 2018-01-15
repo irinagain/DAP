@@ -34,14 +34,14 @@
 apply_DAP <- function(xtrain, ytrain, xtest, ytest = NULL, lambda_seq = NULL, n_lambda = 50,  maxmin_ratio = 0.1, nfolds = 5, eps = 1e-4, maxiter = 10000, myseed = 1001, prior = TRUE){
   
   Xmean = colMeans(xtrain)
-  xtrain <- xtrain - matrix(Xmean, nrow(xtrain), ncol(xtrain), byrow = T)
-  xtest <- xtest - matrix(Xmean, nrow(xtest), ncol(xtest), byrow = T)
-  out_s <- standardizeData(xtrain, ytrain, center = F)
+  xtrain = xtrain - matrix(Xmean, nrow(xtrain), ncol(xtrain), byrow = T)
+  xtest = xtest - matrix(Xmean, nrow(xtest), ncol(xtest), byrow = T)
+  out_s = standardizeData(xtrain, ytrain, center = F)
   
   ## generate lambda sequence
-  l_max <- max(sqrt(colMeans(out_s$X1)^2 + colMeans(out_s$X2)^2))
+  l_max = max(sqrt(colMeans(out_s$X1)^2 + colMeans(out_s$X2)^2))
   if (!is.null(lambda_seq)) {
-    n_l= length(lambda_seq)
+    n_l = length(lambda_seq)
     if (nl < 1){
       warning(paste("There is no qualified lambda value. New values will be generated automatically. n_lambda will be set as.", n_lambda,sep = " "))
       lambda_seq = exp(seq(log(l_max * maxmin_ratio), log(l_max), length.out = n_lambda))
@@ -58,7 +58,7 @@ apply_DAP <- function(xtrain, ytrain, xtest, ytest = NULL, lambda_seq = NULL, n_
   
   ####solve for selected tuning parameter
   out.proj = solve_DAP_C(X1 = out_s$X1, X2 = out_s$X2, lambda = out.cv$lambda_min, eps = eps, maxiter = maxiter)
-  V = cbind(diag(1/out_s$coef1)%*%out.proj$V[,1],diag(1/out_s$coef2)%*% out.proj$V[,2])
+  V = cbind(diag(1 / out_s$coef1) %*% out.proj$V[, 1], diag(1 / out_s$coef2) %*% out.proj$V[, 2])
   
   ### calculate the error and corresponding number of variables
   ####back scaling
@@ -66,7 +66,7 @@ apply_DAP <- function(xtrain, ytrain, xtest, ytest = NULL, lambda_seq = NULL, n_
     ypred = classify_DAP(xtrain, ytrain, xtest, V = V, prior = prior)
     if (!is.null(ytest))
     {
-      error = sum(ypred != ytest)/length(ytest)
+      error = sum(ypred != ytest) / length(ytest)
       return(list(error = error, features = out.proj$nfeature, features_id = c(1:ncol(xtrain))[rowSums(abs(V)) != 0]))
     }else{
       return(list(ypred = ypred, features = out.proj$nfeature, features_id = c(1:ncol(xtrain))[rowSums(abs(V)) != 0]))

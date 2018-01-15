@@ -20,7 +20,7 @@ standardizeData <- function(X, Y, center = T){
   # center X
   Xmean = colMeans(X)
   if (center){
-    X <- X - matrix(Xmean, nrow(X), ncol(X), byrow = T)
+    X = X - matrix(Xmean, nrow(X), ncol(X), byrow = T)
   }
   X1 = X[Y==1,]
   X2 = X[Y==2,]

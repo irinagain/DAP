@@ -26,7 +26,7 @@
 #'
 #' @export 
 #' 
-cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, eps = 1e-4, maxiter = 1000, myseed = 1001, prior = TRUE){
+cv_DAP <- function(X, Y, lambda_seq, nfolds = 5, eps = 1e-4, maxiter = 1000, myseed = 1001, prior = TRUE){
   
   n = length(Y)
   n_lambda = length(lambda_seq)
@@ -37,8 +37,8 @@ cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, eps = 1e-4, maxiter = 1000, myse
   ####random set split the whole data set into k folds corresponding to n1 and n2
   set.seed(myseed)
   id = rep(NA, n)
-  id[Y==1]<- sample(rep(seq_len(nfolds), length.out = sum(Y==1)))
-  id[Y==2]<- sample(rep(seq_len(nfolds), length.out = sum(Y==2)))
+  id[Y==1]= sample(rep(seq_len(nfolds), length.out = sum(Y == 1)))
+  id[Y==2]= sample(rep(seq_len(nfolds), length.out = sum(Y == 2)))
   
   for (nf in 1: nfolds){
     cat(nf)
@@ -47,20 +47,20 @@ cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, eps = 1e-4, maxiter = 1000, myse
     ytrain = Y[id != nf]
     xtest = X[id == nf, ]
     ytest = Y[id == nf]
-    out_s <- standardizeData(xtrain, ytrain, center = T)
+    out_s = standardizeData(xtrain, ytrain, center = T)
     
     # Calculate mean difference based on test data
-    d_test = colMeans(xtest[ytest==1,])-colMeans(xtest[ytest==2,])
+    d_test = colMeans(xtest[ytest == 1, ])-colMeans(xtest[ytest == 2, ])
     
     ####use solve_proj_seq
     fit_tmp = solve_DAP_seq(X1 = out_s$X1, X2 = out_s$X2, lambda_seq = lambda_seq, eps = eps, maxiter = maxiter, feature_max = n)
-    nfeature_mat[nf,1:length(fit_tmp$nfeature_vec)] = fit_tmp$nfeature_vec
+    nfeature_mat[nf, 1:length(fit_tmp$nfeature_vec)] = fit_tmp$nfeature_vec
     
     #### Calculate errors for each lambda
     for (j in 1:length(fit_tmp$lambda_seq)){
-      V = cbind(diag(1/out_s$coef1)%*%fit_tmp$V1_mat[,j],diag(1/out_s$coef2)%*% fit_tmp$V2_mat[,j])
-      ypred = classify_DAP(xtrain- matrix(out_s$Xmean, nrow(xtrain), ncol(xtest), byrow = T), ytrain, xtest = xtest - matrix(out_s$Xmean, nrow(xtest), ncol(xtest), byrow = T), V, prior = prior)
-      error_mat[nf, j] = sum(ypred != ytest)/length(ytest)
+      V = cbind(diag(1 / out_s$coef1) %*% fit_tmp$V1_mat[, j], diag(1 / out_s$coef2) %*% fit_tmp$V2_mat[, j])
+      ypred = classify_DAP(xtrain - matrix(out_s$Xmean, nrow(xtrain), ncol(xtest), byrow = T), ytrain, xtest = xtest - matrix(out_s$Xmean, nrow(xtest), ncol(xtest), byrow = T), V, prior = prior)
+      error_mat[nf, j] = sum(ypred != ytest) / length(ytest)
     }
   }
   ####calculate cvm, cvse, lambda_min, lambda_1se
@@ -68,7 +68,7 @@ cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, eps = 1e-4, maxiter = 1000, myse
   index = which.min(cvm)
   lambda_min = lambda_seq[index]
   
-  cvse = apply(error_mat, 2, sd)/sqrt(nfolds)
+  cvse = apply(error_mat, 2, sd) / sqrt(nfolds)
   se_lambda = cvse[index]
   up_b = cvm[index] + se_lambda
   lambda_1se = (lambda_seq[cvm <= up_b])[1]
