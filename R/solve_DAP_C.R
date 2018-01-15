@@ -1,23 +1,21 @@
 #' Solve Optimization Problem (C version, fixed lambda)
 #'
-#' Solving group lasso using block-coordinate decent algorithm for a
+#' Solving group lasso using block-coordinate descent algorithm for a
 #' fixed value of lambda. C code is used for coding basic functions
 #' to speed up.
 #'
 #' @useDynLib DAP solveProj_withS
 #' 
-#' @param X1 A matrix (\code{n_1} by \code{p}) of group 1 data
-#' (scaled).
-#' @param X2 A matrix (\code{n_2} by \code{p}) of group 2 data
-#' (scaled).
+#' @param X1 A \code{n_1} x \code{p} training data set for group 1 (scaled).
+#' @param X2 A \code{n_2} x \code{p} training data set for group 2 (scaled).
 #' @param lambda A fixed value of the tuning parameter.
-#' @param Vinit Starting point. The default is "NULL".
-#' @param eps Convergence threshold for block-coordinate decent
-#' algorithm. Each block-coordinate decent algorithm loop continuoues
+#' @param Vinit Starting point, the default is "NULL".
+#' @param eps Convergence threshold for block-coordinate descent
+#' algorithm. Each block-coordinate descent algorithm loop continuously
 #' until the maximum iteration number exceeds \code{maxiter} or the
-#' maximum element-wise change in \eqn{V} is less than \code{eps}.
+#' maximum element-wise change in \code{V} is less than \code{eps}.
 #' Default is 1e-4.
-#' @param maxiter Maximum number of iterations. Default is 10000.
+#' @param maxiter Maximum number of iterations, the default is 10000.
 #'
 #' @return A list with following components:
 #'        \item{V}{The projection matrix.}
