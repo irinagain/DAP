@@ -9,7 +9,7 @@
 #' @param eps Convergence threshold for the block-coordinate decent
 #' algorithm based on the maximum element-wise change in \eqn{V}. The
 #' default is 1e-4.
-#' @param m_max Maximum number of iterations, the default is 10000.
+#' @param maxiter Maximum number of iterations, the default is 10000.
 #' @param myseed Optional specification of random seed for generating the folds, the default value is 1001.
 #' @param prior A logical indicating whether to put larger weights to the groups of larger size; the default value is \code{TRUE}.
 #'
@@ -26,7 +26,7 @@
 #'
 #' @export 
 #' 
-cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, eps = 1e-4, m_max = 1000, myseed = 1001, prior = TRUE){
+cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, eps = 1e-4, maxiter = 1000, myseed = 1001, prior = TRUE){
   
   n = length(Y)
   n_lambda = length(lambda_seq)
@@ -53,7 +53,7 @@ cv_DAP <-function(X, Y, lambda_seq, nfolds = 5, eps = 1e-4, m_max = 1000, myseed
     d_test = colMeans(xtest[ytest==1,])-colMeans(xtest[ytest==2,])
     
     ####use solve_proj_seq
-    fit_tmp = solve_DAP_seq(X1 = out_s$X1, X2 = out_s$X2, lambda_seq = lambda_seq, eps = eps, m_max = m_max, feature_max = n)
+    fit_tmp = solve_DAP_seq(X1 = out_s$X1, X2 = out_s$X2, lambda_seq = lambda_seq, eps = eps, maxiter = maxiter, feature_max = n)
     nfeature_mat[nf,1:length(fit_tmp$nfeature_vec)] = fit_tmp$nfeature_vec
     
     #### Calculate errors for each lambda
