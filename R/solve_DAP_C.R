@@ -13,14 +13,13 @@
 #' @param eps Convergence threshold for the block-coordinate decent algorithm based on the maximum element-wise change in \eqn{V}. The default is 1e-4.
 #' @param maxiter Maximum number of iterations, the default is 10000.
 #'
-#' @return A list with following components:
+#' @return A list of
 #'        \item{V}{The projection matrix.}
 #'        \item{nfeature}{The number of selected features.}
-#'        \item{iter}{Iteration numbers used to converge.}
+#'        \item{iter}{Number of iterations until convergence.}
 #'
 #' @section Warnings:
-#' Please take scaled X1 and X2 for this function. One can use
-#' function "standardizeData" to do so.
+#' Please use scaled \code{X1} and \code{X2} for this function, they can be obtained using \code{standardizeData} to do so.
 #'
 #' @example man/examples/solve_DAP_C_eg.R
 #'

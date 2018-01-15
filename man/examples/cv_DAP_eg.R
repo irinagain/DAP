@@ -14,8 +14,8 @@ x1 = MASS::mvrnorm(n = n1, mu = mu1, Sigma = Sigma1)
 x2 = MASS::mvrnorm(n = n2, mu = mu2, Sigma = Sigma2)
 y1 = rep(1, n1)
 y2 = rep(2, n2)
-xtrain <- rbind(x1, x2)
-ytrain <- c(rep(1, n1), rep(2, n2))
+xtrain = rbind(x1, x2)
+ytrain = c(rep(1, n1), rep(2, n2))
 
 ## Apply cv_DAP
 fit = cv_DAP(X = xtrain, Y = ytrain, lambda_seq = c(0.2, 0.3, 0.5, 0.7, 0.9))

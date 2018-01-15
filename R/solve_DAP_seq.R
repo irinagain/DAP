@@ -6,17 +6,17 @@
 #' @param X2 A n2 x p matrix of group 2 data (scaled).
 #' @param lambda_seq A supplied sequence of tunning parameters.
 #' @param eps Convergence threshold for the block-coordinate decent algorithm based on the maximum element-wise change in \eqn{V}. The default is 1e-4.
-#' @param m_max Maximum number of iterations, the default is 10000.
+#' @param maxiter Maximum number of iterations, the default is 10000.
 #' @param feature_max The maximum number of features that can be
 #' selected. Default is the total sample size. Once the maximum is
-#' reached, the function will return the reasults and larger lambda
+#' reached, the function will return the results and larger lambda
 #' values won't be applied.
 #'
-#' @return A list with the following components.
+#' @return A list of
 #'        \item{V1_mat}{A matrix of the first projection vector V1
-#'        correstponding to the sequence of lambda.}
+#'        corresponding to the sequence of lambda.}
 #'        \item{V2_mat}{A matrix of the second projection vector V2
-#'        correstponding to the sequence of lambda.}
+#'        corresponding to the sequence of lambda.}
 #'        \item{lambda_seq}{The sequence of lambda that has been
 #'        applied to the data.}
 #'        \item{nfeature_vec}{A sequence of number of selected
@@ -26,7 +26,7 @@
 #'
 #' @export
 #'
-solve_DAP_seq <- function(X1, X2, lambda_seq, eps = 1e-4, m_max = 10000, feature_max = nrow(X1) + nrow(X2)){
+solve_DAP_seq <- function(X1, X2, lambda_seq, eps = 1e-4, maxiter = 10000, feature_max = nrow(X1) + nrow(X2)){
   p =ncol(X1)
   n_lambda = length(lambda_seq)
   
@@ -36,7 +36,7 @@ solve_DAP_seq <- function(X1, X2, lambda_seq, eps = 1e-4, m_max = 10000, feature
   nfeature_vec = rep(NA, n_lambda)
   for (i in 1:n_lambda){
     ####use solve_proj for each lambda
-    out = solve_DAP_C(X1, X2, lambda = lambda_seq[i], Vinit = V0, eps = eps, maxiter = m_max)
+    out = solve_DAP_C(X1, X2, lambda = lambda_seq[i], Vinit = V0, eps = eps, maxiter = maxiter)
     ####use V0 from previous iteration as a warm start
     V0 = out$V
     V1_mat[, i] = V0[, 1]

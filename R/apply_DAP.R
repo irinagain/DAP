@@ -16,7 +16,7 @@
 #' @param eps Convergence threshold for the block-coordinate decent
 #' algorithm based on the maximum element-wise change in \eqn{V}. The
 #' default is 1e-4.
-#' @param m_max Maximum number of iterations, the default is 10000.
+#' @param maxiter Maximum number of iterations, the default is 10000.
 #' @param myseed Optional specification of random seed for generating the folds, the default value is 1001.
 #' @param prior A logical indicating whether to put larger weights to the groups of larger size; the default value is \code{TRUE}.
 #' 
@@ -31,7 +31,7 @@
 #' 
 #' @export
 #' 
-apply_DAP <- function(xtrain, ytrain, xtest, ytest = NULL, lambda_seq = NULL, n_lambda = 50,  maxmin_ratio = 0.1, nfolds = 5, eps = 1e-4, m_max = 10000, myseed = 1001, prior = TRUE){
+apply_DAP <- function(xtrain, ytrain, xtest, ytest = NULL, lambda_seq = NULL, n_lambda = 50,  maxmin_ratio = 0.1, nfolds = 5, eps = 1e-4, maxiter = 10000, myseed = 1001, prior = TRUE){
   
   Xmean = colMeans(xtrain)
   xtrain <- xtrain - matrix(Xmean, nrow(xtrain), ncol(xtrain), byrow = T)
@@ -54,10 +54,10 @@ apply_DAP <- function(xtrain, ytrain, xtest, ytest = NULL, lambda_seq = NULL, n_
   lambda_seq = sort(lambda_seq, decreasing = TRUE)
   
   ####use cv to select the tuning parameter
-  out.cv = cv_DAP(X = xtrain, Y = ytrain, lambda_seq = lambda_seq, nfolds = nfolds, eps = eps, m_max = m_max, myseed = myseed, prior = prior)
+  out.cv = cv_DAP(X = xtrain, Y = ytrain, lambda_seq = lambda_seq, nfolds = nfolds, eps = eps, maxiter = maxiter, myseed = myseed, prior = prior)
   
   ####solve for selected tuning parameter
-  out.proj = solve_DAP_C(X1 = out_s$X1, X2 = out_s$X2, lambda = out.cv$lambda_min, eps = eps, maxiter = m_max)
+  out.proj = solve_DAP_C(X1 = out_s$X1, X2 = out_s$X2, lambda = out.cv$lambda_min, eps = eps, maxiter = maxiter)
   V = cbind(diag(1/out_s$coef1)%*%out.proj$V[,1],diag(1/out_s$coef2)%*% out.proj$V[,2])
   
   ### calculate the error and corresponding number of variables
