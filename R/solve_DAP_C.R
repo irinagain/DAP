@@ -1,30 +1,25 @@
-#' Solve Optimization Problem (C version, fixed lambda)
+#' Solves DAP optimization problem for one given lambda value 
 #'
-#' Solving group lasso using block-coordinate descent algorithm for a
-#' fixed value of lambda. C code is used for coding basic functions
-#' to speed up.
+#' Uses block-coordinate descent algorithm to solve DAP problem.
 #'
 #' @useDynLib DAP solveProj_withS
 #' 
-#' @param X1 A \code{n_1} x \code{p} training data set for group 1 (scaled).
-#' @param X2 A \code{n_2} x \code{p} training data set for group 2 (scaled).
-#' @param lambda A fixed value of the tuning parameter.
-#' @param Vinit Starting point, the default is "NULL".
-#' @param eps Convergence threshold for block-coordinate descent
-#' algorithm. Each block-coordinate descent algorithm loop continuously
-#' until the maximum iteration number exceeds \code{maxiter} or the
-#' maximum element-wise change in \code{V} is less than \code{eps}.
-#' Default is 1e-4.
+#' @param X1 A n1 x p matrix of group 1 data
+#' (scaled).
+#' @param X2 A n2 x p matrix of group 2 data
+#' (scaled).
+#' @param lambda A value of the tuning parameter lambda.
+#' @param Vinit Optional starting point, the default is NULL, and the algorithm starts with the matrix of zeros.
+#' @param eps Convergence threshold for the block-coordinate decent algorithm based on the maximum element-wise change in \eqn{V}. The default is 1e-4.
 #' @param maxiter Maximum number of iterations, the default is 10000.
 #'
-#' @return A list with following components:
+#' @return A list of
 #'        \item{V}{The projection matrix.}
 #'        \item{nfeature}{The number of selected features.}
-#'        \item{iter}{Iteration numbers used to converge.}
+#'        \item{iter}{Number of iterations until convergence.}
 #'
 #' @section Warnings:
-#' Please take scaled X1 and X2 for this function. One can use
-#' function "standardizeData" to do so.
+#' Please use scaled \code{X1} and \code{X2} for this function, they can be obtained using \code{standardizeData} to do so.
 #'
 #' @example man/examples/solve_DAP_C_eg.R
 #'

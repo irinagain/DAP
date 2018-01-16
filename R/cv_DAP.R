@@ -6,9 +6,6 @@
 #' @param Y A n vector of training group labels, either 1 or 2.
 #' @param lambda_seq A sequence of tuning parameters to choose from.
 #' @param nfolds Number of folds for cross-validation, the default is 5.
-#' @param eps Convergence threshold for the block-coordinate decent
-#' algorithm based on the maximum element-wise change in \eqn{V}. The
-#' default is 1e-4.
 #' @param maxiter Maximum number of iterations, the default is 10000.
 #' @param myseed Optional specification of random seed for generating the folds, the default value is 1001.
 #' @param prior A logical indicating whether to put larger weights to the groups of larger size; the default value is \code{TRUE}.

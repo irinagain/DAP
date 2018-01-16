@@ -1,23 +1,18 @@
-#' Solve Optimization Problem for a sequence of lambda
+#' Solves DAP optimization problem for a given sequence of lambda values
 #'
-#' Solving group lasso problem using block-coordinate algorithm for a
-#' sequence of lambda.
+#' Uses block-coordinate descent algorithm with warm initializations, starts with the maximal supplied lambda value.
 #'
-#' @param X1 A \code{n_1} x \code{p} training data set for group 1 (scaled).
-#' @param X2 A \code{n_2} x \code{p} training data set for group 2 (scaled).
-#' @param lambda_seq A sequence of tuning parameter lambda.
-#' @param eps Convergence threshold for block-coordinate decent
-#' algorithm. Each block-coordinate descent algorithm loop continuously
-#' until the maximum iteration number exceeds \code{maxiter} or the
-#' maximum element-wise change in \eqn{V} is less than \code{eps}.
-#' Default is 1e-4.
+#' @param X1 A n1 x p matrix of group 1 data (scaled).
+#' @param X2 A n2 x p matrix of group 2 data (scaled).
+#' @param lambda_seq A supplied sequence of tunning parameters.
+#' @param eps Convergence threshold for the block-coordinate decent algorithm based on the maximum element-wise change in \eqn{V}. The default is 1e-4.
 #' @param maxiter Maximum number of iterations, the default is 10000.
 #' @param feature_max The maximum number of features that can be
 #' selected. Default is the total sample size. Once the maximum is
 #' reached, the function will return the results and larger lambda
 #' values won't be applied.
 #'
-#' @return A list with the following components.
+#' @return A list of
 #'        \item{V1_mat}{A matrix of the first projection vector V1
 #'        corresponding to the sequence of lambda.}
 #'        \item{V2_mat}{A matrix of the second projection vector V2
