@@ -2,51 +2,46 @@
 % Please edit documentation in R/solve_DAP_seq.R
 \name{solve_DAP_seq}
 \alias{solve_DAP_seq}
-\title{Solve Optimization Problem for a sequence of lambda}
+\title{Solves DAP optimization problem for a given sequence of lambda values}
 \usage{
-solve_DAP_seq(X1, X2, lambda_seq, eps = 1e-04, m_max = 10000,
+solve_DAP_seq(X1, X2, lambda_seq, eps = 1e-04, maxiter = 10000,
   feature_max = nrow(X1) + nrow(X2))
 }
 \arguments{
-\item{X1}{A matrix (\code{n_1} by p) of group 1 data (scaled).}
+\item{X1}{A n1 x p matrix of group 1 data (scaled).}
 
-\item{X2}{A matrix (\code{n_2} by p) of group 2 data (scaled).}
+\item{X2}{A n2 x p matrix of group 2 data (scaled).}
 
-\item{lambda_seq}{A sequence of tunning parameter lambda.}
+\item{lambda_seq}{A supplied sequence of tunning parameters.}
 
-\item{eps}{Convergence threshold for block-coordinate decent
-algorithm. Each block-coordinate decent algorithm loop continuoues
-until the maximum iteration number exceeds \code{maxiter} or the
-maximum element-wise change in \eqn{V} is less than \code{eps}.
-Default is 1e-4.}
+\item{eps}{Convergence threshold for the block-coordinate decent algorithm based on the maximum element-wise change in \eqn{V}. The default is 1e-4.}
 
-\item{m_max}{Maximum number of iterations. Default is 10000.}
+\item{maxiter}{Maximum number of iterations, the default is 10000.}
 
 \item{feature_max}{The maximum number of features that can be
 selected. Default is the total sample size. Once the maximum is
-reached, the function will return the reasults and larger lambda
+reached, the function will return the results and larger lambda
 values won't be applied.}
 }
 \value{
-A list with the following components.
+A list of
        \item{V1_mat}{A matrix of the first projection vector V1
-       correstponding to the sequence of lambda.}
+       corresponding to the sequence of lambda.}
        \item{V2_mat}{A matrix of the second projection vector V2
-       correstponding to the sequence of lambda.}
+       corresponding to the sequence of lambda.}
        \item{lambda_seq}{The sequence of lambda that has been
        applied to the data.}
        \item{nfeature_vec}{A sequence of number of selected
        features.}
 }
 \description{
-Solving group lasso problem using block-coordinate algorithm for a
-sequence of lambda.
+Uses block-coordinate descent algorithm with warm initializations, starts with the maximal supplied lambda value.
 }
 \examples{
 ## This is an example for solve_DAP_seq
 
 ## Generate data
-n1 = n2 = 50
+n_train = 50
 n_test = 50
 p = 100
 mu1 = rep(0, p)
@@ -55,15 +50,13 @@ Sigma1 = diag(p)
 Sigma2 = 0.5* diag(p)
 
 ## Build training data
-x1 = MASS::mvrnorm(n = n1, mu = mu1, Sigma = Sigma1)
-x2 = MASS::mvrnorm(n = n2, mu = mu2, Sigma = Sigma2)
-y1 = rep(1, n1)
-y2 = rep(2, n2)
-xtrain <- rbind(x1, x2)
-ytrain <- c(rep(1, n1), rep(2, n2))
+x1 = MASS::mvrnorm(n = n_train, mu = mu1, Sigma = Sigma1)
+x2 = MASS::mvrnorm(n = n_train, mu = mu2, Sigma = Sigma2)
+xtrain = rbind(x1, x2)
+ytrain = c(rep(1, n_train), rep(2, n_train))
 
 ## Standardize the data
-out_s <- standardizeData(xtrain, ytrain, center = F)
+out_s = standardizeData(xtrain, ytrain, center = F)
 
 ####use solve_proj_seq
 fit = solve_DAP_seq(X1 = out_s$X1, X2 = out_s$X2, lambda_seq = c(0.2, 0.3, 0.5, 0.7, 0.9))

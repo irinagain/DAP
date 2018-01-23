@@ -2,51 +2,44 @@
 % Please edit documentation in R/solve_DAP_C.R
 \name{solve_DAP_C}
 \alias{solve_DAP_C}
-\title{Solve Optimization Problem (C version, fixed lambda)}
+\title{Solves DAP optimization problem for one given lambda value}
 \usage{
 solve_DAP_C(X1, X2, lambda, Vinit = NULL, eps = 1e-04, maxiter = 10000)
 }
 \arguments{
-\item{X1}{A matrix (\code{n_1} by \code{p}) of group 1 data
+\item{X1}{A n1 x p matrix of group 1 data
 (scaled).}
 
-\item{X2}{A matrix (\code{n_2} by \code{p}) of group 2 data
+\item{X2}{A n2 x p matrix of group 2 data
 (scaled).}
 
-\item{lambda}{A fixed value of the tuning parameter.}
+\item{lambda}{A value of the tuning parameter lambda.}
 
-\item{Vinit}{Starting point. The default is "NULL".}
+\item{Vinit}{Optional starting point, the default is NULL, and the algorithm starts with the matrix of zeros.}
 
-\item{eps}{Convergence threshold for block-coordinate decent
-algorithm. Each block-coordinate decent algorithm loop continuoues
-until the maximum iteration number exceeds \code{maxiter} or the
-maximum element-wise change in \eqn{V} is less than \code{eps}.
-Default is 1e-4.}
+\item{eps}{Convergence threshold for the block-coordinate decent algorithm based on the maximum element-wise change in \eqn{V}. The default is 1e-4.}
 
-\item{maxiter}{Maximum number of iterations. Default is 10000.}
+\item{maxiter}{Maximum number of iterations, the default is 10000.}
 }
 \value{
-A list with following components:
+A list of
        \item{V}{The projection matrix.}
        \item{nfeature}{The number of selected features.}
-       \item{iter}{Iteration numbers used to converge.}
+       \item{iter}{Number of iterations until convergence.}
 }
 \description{
-Solving group lasso using block-coordinate decent algorithm for a
-fixed value of lambda. C code is used for coding basic functions
-to speed up.
+Uses block-coordinate descent algorithm to solve DAP problem.
 }
 \section{Warnings}{
 
-Please take scaled X1 and X2 for this function. One can use
-function "standardizeData" to do so.
+Please use scaled \code{X1} and \code{X2} for this function, they can be obtained using \code{standardizeData} to do so.
 }
 
 \examples{
 ## This is an example for solve_DAP_C
 
 ## Generate data
-n1 = n2 = 50
+n_train = 50
 n_test = 50
 p = 100
 mu1 = rep(0, p)
@@ -55,11 +48,13 @@ Sigma1 = diag(p)
 Sigma2 = 0.5* diag(p)
 
 ## Build training data
-x1 = MASS::mvrnorm(n = n1, mu = mu1, Sigma = Sigma1)
-x2 = MASS::mvrnorm(n = n2, mu = mu2, Sigma = Sigma2)
-xtrain <- rbind(x1, x2)
-ytrain <- c(rep(1, n1), rep(2, n2))
-out_s <- standardizeData(xtrain, ytrain, center = F)
+x1 = MASS::mvrnorm(n = n_train, mu = mu1, Sigma = Sigma1)
+x2 = MASS::mvrnorm(n = n_train, mu = mu2, Sigma = Sigma2)
+xtrain = rbind(x1, x2)
+ytrain = c(rep(1, n_train), rep(2, n_train))
+
+## Standardize the data
+out_s = standardizeData(xtrain, ytrain, center = F)
 
 ## Apply solve_DAP_C
 out = solve_DAP_C(X1 = out_s$X1, X2 = out_s$X2, lambda = 0.3)

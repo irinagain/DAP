@@ -7,28 +7,28 @@
 standardizeData(X, Y, center = T)
 }
 \arguments{
-\item{X}{A n by p matrix of n observations with p measurements per each.}
+\item{X}{A n x p training dataset; n observations on the rows and p features on the columns.}
 
-\item{Y}{The class-indicator denoting a binary label for each observation.}
+\item{Y}{A n vector of training group labels, either 1 or 2.}
 
-\item{center}{wheather \eqn{X} will be centered or not. The default is "TURE".}
+\item{center}{A logical indicating whether \code{X} should be centered, the default is TRUE.}
 }
 \value{
-A list with components:
-    \item{X1}{Standardized observations labeled in group 1.}
-    \item{X2}{Standardized observations labeled in group 2.}
-    \item{coef1}{Coefficient of \eqn{X1} for back-scaling.}
-    \item{coef2}{Coefficient of \eqn{X2} for back-scaling.}
-    \item{Xmean}{Column mean for the matrix \eqn{X}.}
+A list of
+    \item{X1}{A n1 x p standardized matrix with observations from group 1.}
+    \item{X2}{A n2 x p standardized matrix with observations from group 2.}
+    \item{coef1}{Back-scaling coefficients for \code{X1}.}
+    \item{coef2}{Back-scaling coefficients for \code{X2}.}
+    \item{Xmean}{Column means of the matrix \code{X} before centering.}
 }
 \description{
-Given matrix \eqn{X} and class-indicator \eqn{Y}, the following function centers \eqn{X}, and then forms \eqn{X1} and \eqn{X2} which are scaled, as well as coefficients for back-scaling.
+Given matrix \code{X} with corresponding class labels in \code{Y}, the function column-centers \code{X}, divides it into two submatrices corresponding to each class, and then scales the columns of each submatrix to have eucledean norm equal to one.
 }
 \examples{
 # An example for the function standardizeData
 
 ## Generate data
-n1 = n2 = 50
+n_train = 50
 n_test = 50
 p = 100
 mu1 = rep(0, p)
@@ -37,14 +37,12 @@ Sigma1 = diag(p)
 Sigma2 = 0.5* diag(p)
 
 ## Build training data
-x1 = MASS::mvrnorm(n = n1, mu = mu1, Sigma = Sigma1)
-x2 = MASS::mvrnorm(n = n2, mu = mu2, Sigma = Sigma2)
-y1 = rep(1, n1)
-y2 = rep(2, n2)
-xtrain <- rbind(x1, x2)
-ytrain <- c(rep(1, n1), rep(2, n2))
+x1 = MASS::mvrnorm(n = n_train, mu = mu1, Sigma = Sigma1)
+x2 = MASS::mvrnorm(n = n_train, mu = mu2, Sigma = Sigma2)
+xtrain = rbind(x1, x2)
+ytrain = c(rep(1, n_train), rep(2, n_train))
 
 ## Standardize data
-out_s <- standardizeData(xtrain, ytrain, center = F)
+out_s = standardizeData(xtrain, ytrain, center = F)
 
 }

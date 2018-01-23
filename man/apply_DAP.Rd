@@ -6,7 +6,7 @@
 \usage{
 apply_DAP(xtrain, ytrain, xtest, ytest = NULL, lambda_seq = NULL,
   n_lambda = 50, maxmin_ratio = 0.1, nfolds = 5, eps = 1e-04,
-  m_max = 10000, myseed = 1001, prior = TRUE)
+  maxiter = 10000, myseed = 1001, prior = TRUE)
 }
 \arguments{
 \item{xtrain}{A n x p training dataset; n observations on the rows and p features on the columns.}
@@ -32,7 +32,7 @@ Default is \code{NULL}.}
 algorithm based on the maximum element-wise change in \eqn{V}. The
 default is 1e-4.}
 
-\item{m_max}{Maximum number of iterations, the default is 10000.}
+\item{maxiter}{Maximum number of iterations, the default is 10000.}
 
 \item{myseed}{Optional specification of random seed for generating the folds, the default value is 1001.}
 
@@ -55,7 +55,7 @@ If no feature is selected by DAP, the function will return \code{error} of 0.5 a
 ## This is an example for apply_DAP
 
 ## Generate data
-n1 = n2 = 50
+n_train = 50
 n_test = 50
 p = 100
 mu1 = rep(0, p)
@@ -64,16 +64,14 @@ Sigma1 = diag(p)
 Sigma2 = 0.5* diag(p)
 
 ## Build training data and test data
-x1 = MASS::mvrnorm(n = n1, mu = mu1, Sigma = Sigma1)
-x2 = MASS::mvrnorm(n = n2, mu = mu2, Sigma = Sigma2)
-y1 = rep(1, n1)
-y2 = rep(2, n2)
-xtrain <- rbind(x1, x2)
+x1 = MASS::mvrnorm(n = n_train, mu = mu1, Sigma = Sigma1)
+x2 = MASS::mvrnorm(n = n_train, mu = mu2, Sigma = Sigma2)
+xtrain = rbind(x1, x2)
 x1_test = MASS::mvrnorm(n = n_test, mu = mu1, Sigma = Sigma1)
 x2_test = MASS::mvrnorm(n = n_test, mu = mu2, Sigma = Sigma2)
-xtest <- rbind(x1_test, x2_test)
-ytrain <- c(rep(1, n1), rep(2, n2))
-ytest <- c(rep(1, n_test), rep(2, n_test))
+xtest = rbind(x1_test, x2_test)
+ytrain = c(rep(1, n_train), rep(2, n_train))
+ytest = c(rep(1, n_test), rep(2, n_test))
 
 ## Apply DAP
 

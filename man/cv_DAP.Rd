@@ -4,7 +4,7 @@
 \alias{cv_DAP}
 \title{Cross-validation for DAP}
 \usage{
-cv_DAP(X, Y, lambda_seq, nfolds = 5, eps = 1e-04, m_max = 1000,
+cv_DAP(X, Y, lambda_seq, nfolds = 5, eps = 1e-04, maxiter = 1000,
   myseed = 1001, prior = TRUE)
 }
 \arguments{
@@ -16,11 +16,7 @@ cv_DAP(X, Y, lambda_seq, nfolds = 5, eps = 1e-04, m_max = 1000,
 
 \item{nfolds}{Number of folds for cross-validation, the default is 5.}
 
-\item{eps}{Convergence threshold for the block-coordinate decent
-algorithm based on the maximum element-wise change in \eqn{V}. The
-default is 1e-4.}
-
-\item{m_max}{Maximum number of iterations, the default is 10000.}
+\item{maxiter}{Maximum number of iterations, the default is 10000.}
 
 \item{myseed}{Optional specification of random seed for generating the folds, the default value is 1001.}
 
@@ -43,7 +39,7 @@ Chooses optimal tuning parameter lambda for DAP based on the k-fold cross-valida
 ## This is an example for cv_DAP
 
 ## Generate data
-n1 = n2 = 50
+n_train = 50
 n_test = 50
 p = 100
 mu1 = rep(0, p)
@@ -51,13 +47,11 @@ mu2 = rep(3, p)
 Sigma1 = diag(p)
 Sigma2 = 0.5* diag(p)
 
-## Build training data and test data
-x1 = MASS::mvrnorm(n = n1, mu = mu1, Sigma = Sigma1)
-x2 = MASS::mvrnorm(n = n2, mu = mu2, Sigma = Sigma2)
-y1 = rep(1, n1)
-y2 = rep(2, n2)
-xtrain <- rbind(x1, x2)
-ytrain <- c(rep(1, n1), rep(2, n2))
+## Build training data
+x1 = MASS::mvrnorm(n = n_train, mu = mu1, Sigma = Sigma1)
+x2 = MASS::mvrnorm(n = n_train, mu = mu2, Sigma = Sigma2)
+xtrain = rbind(x1, x2)
+ytrain = c(rep(1, n_train), rep(2, n_train))
 
 ## Apply cv_DAP
 fit = cv_DAP(X = xtrain, Y = ytrain, lambda_seq = c(0.2, 0.3, 0.5, 0.7, 0.9))
