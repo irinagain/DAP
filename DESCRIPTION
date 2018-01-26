@@ -5,7 +5,7 @@ Version: 1.0
 Date: 2017-10-18
 Author: Tianying Wang and Irina Gaynanova
 Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
+Description: An implementation of Discriminant Analysis via Projections (DAP) method for high-dimensional binary classification in the case of unequal covariance matrices.
 License: What license is it under?
 Imports: MASS
 LazyData: TRUE
