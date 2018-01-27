@@ -1,6 +1,6 @@
-#' Standardize the data
+#' Divides the features matrix into two standardized submatrices
 #'
-#' Given matrix \code{X} with corresponding class labels in \code{Y}, the function column-centers \code{X}, divides it into two submatrices corresponding to each class, and then scales the columns of each submatrix to have eucledean norm equal to one.
+#' Given matrix \code{X} with corresponding class labels in \code{Y}, the function column-centers \code{X}, divides it into two submatrices corresponding to each class, and scales the columns of each submatrix to have eucledean norm equal to one.
 #'
 #' @param X A n x p training dataset; n observations on the rows and p features on the columns.
 #' @param Y A n vector of training group labels, either 1 or 2.

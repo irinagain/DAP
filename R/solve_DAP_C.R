@@ -1,4 +1,4 @@
-#' Solves DAP optimization problem for one given lambda value 
+#' Solves DAP optimization problem for a given lambda value 
 #'
 #' Uses block-coordinate descent algorithm to solve DAP problem.
 #'
@@ -14,8 +14,8 @@
 #' @param maxiter Maximum number of iterations, the default is 10000.
 #'
 #' @return A list of
-#'        \item{V}{The projection matrix.}
-#'        \item{nfeature}{The number of selected features.}
+#'        \item{V}{A p x 2 projection matrix to be used in DAP classification algorithm.}
+#'        \item{nfeature}{Number of nonzero features.}
 #'        \item{iter}{Number of iterations until convergence.}
 #'
 #' @section Warnings:

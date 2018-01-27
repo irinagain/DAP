@@ -7,27 +7,21 @@
 #' @param lambda_seq A supplied sequence of tunning parameters.
 #' @param eps Convergence threshold for the block-coordinate decent algorithm based on the maximum element-wise change in \eqn{V}. The default is 1e-4.
 #' @param maxiter Maximum number of iterations, the default is 10000.
-#' @param feature_max The maximum number of features that can be
-#' selected. Default is the total sample size. Once the maximum is
-#' reached, the function will return the results and larger lambda
-#' values won't be applied.
+#' @param feature_max An upper bound on the number of nonzero features in the solution; the default value is the total sample size. The algorithm trims the supplied \code{lambda_seq} to eliminate solutions that exceed \code{feature_max}.
 #'
 #' @return A list of
-#'        \item{V1_mat}{A matrix of the first projection vector V1
-#'        corresponding to the sequence of lambda.}
-#'        \item{V2_mat}{A matrix of the second projection vector V2
-#'        corresponding to the sequence of lambda.}
-#'        \item{lambda_seq}{The sequence of lambda that has been
-#'        applied to the data.}
-#'        \item{nfeature_vec}{A sequence of number of selected
-#'        features.}
+#'    \item{lambda_seq}{A sequence of considered lambda values.}
+#'        \item{V1_mat}{A p x m matrix with columns corresponding to the 1st projection vector V1 found at each lambda from \code{lambda_seq}.}
+#'        \item{V2_mat}{A p x m matrix with columns corresponding to the 2nd projection vector V2 found at each lambda from \code{lambda_seq}.}
+#'       
+#'        \item{nfeature_vec}{A sequence of corresponding number of selected features for each value in \code{lambda_seq}.}
 #'
 #' @example man/examples/solve_DAP_seq_eg.R
 #'
 #' @export
 #'
 solve_DAP_seq <- function(X1, X2, lambda_seq, eps = 1e-4, maxiter = 10000, feature_max = nrow(X1) + nrow(X2)){
-  p =ncol(X1)
+  p = ncol(X1)
   n_lambda = length(lambda_seq)
   
   ####initilize V1_mat, V2_mat, both p by n_lambda, V0
@@ -47,5 +41,5 @@ solve_DAP_seq <- function(X1, X2, lambda_seq, eps = 1e-4, maxiter = 10000, featu
       return (list(V1_mat = V1_mat[,1:i], V2_mat = V2_mat[,1:i], lambda_seq = lambda_seq[1:i], nfeature_vec = nfeature_vec[1:i]))
     }
   }
-  return (list(V1_mat = V1_mat, V2_mat = V2_mat, lambda_seq = lambda_seq, nfeature_vec = nfeature_vec))
+  return(list(V1_mat = V1_mat, V2_mat = V2_mat, lambda_seq = lambda_seq, nfeature_vec = nfeature_vec))
 }

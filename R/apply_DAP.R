@@ -9,7 +9,7 @@
 #' the function returns misclassification error rate;
 #' if \code{NULL}, the function returns predicted labels for \code{xtest}. 
 #' Default is \code{NULL}.
-#' @param lambda_seq An optional sequence of tunning parameters lambda. Deafult is \code{NULL}, and the function generates its own sequence.
+#' @param lambda_seq An optional sequence of tunning parameters lambda. Default is \code{NULL}, and the function generates its own sequence.
 #' @param n_lambda Number of lambda values, the default is 50.
 #' @param maxmin_ratio Smallest value for lambda, as a fraction of maximal value for which all coefficients are zero. The default is 0.1.
 #' @param nfolds Number of folds for cross-validation, the default is 5.
