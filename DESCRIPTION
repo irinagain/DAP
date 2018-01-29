@@ -2,9 +2,9 @@ Package: DAP
 Type: Package
 Title: Discriminant analysis via projections 
 Version: 1.0
-Date: 2017-10-18
+Date: 2018-01-29
 Author: Tianying Wang and Irina Gaynanova
-Maintainer: Who to complain to <yourfault@somewhere.net>
+Maintainer: Tianying Wang <tianying@stat.tamu.edu>
 Description: An implementation of Discriminant Analysis via Projections (DAP) method for high-dimensional binary classification in the case of unequal covariance matrices.
 License: GPL (>=2)
 Imports: MASS
