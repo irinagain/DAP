@@ -16,6 +16,8 @@ cv_DAP(X, Y, lambda_seq, nfolds = 5, eps = 1e-04, maxiter = 1000,
 
 \item{nfolds}{Number of folds for cross-validation, the default is 5.}
 
+\item{eps}{Convergence threshold for the block-coordinate decent algorithm based on the maximum element-wise change in \eqn{V}. The default is 1e-4.}
+
 \item{maxiter}{Maximum number of iterations, the default is 10000.}
 
 \item{myseed}{Optional specification of random seed for generating the folds, the default value is 1001.}
@@ -27,8 +29,8 @@ A list of
         \item{lambda_seq}{The sequence of tuning parameters used.}
        \item{cvm}{The mean cross-validated error rate - a vector of length \code{length(lambda_seq)}}
        \item{cvse}{The estimated standard error vector corresponding to \code{cvm}.}
-       \item{lambda_min}{Value of tuning parameter corresponding to the minimum in \code{cvm}.}
-       \item{lambda_1se}{The largest value of tuning parameter such that the correspondig error is within 1 standard error of the minimum in \code{cvm}.}
+       \item{lambda_min}{Value of tuning parameter corresponding to the minimal error in \code{cvm}.}
+       \item{lambda_1se}{The largest value of tuning parameter such that the correspondig error is within 1 standard error of the minimal error in \code{cvm}.}
        \item{nfeature_mat}{A \code{nfolds} x \code{length(lambda_seq)} matrix of the number of selected features.}
        \item{error_mat}{A \code{nfolds} x \code{length(lambda_seq)} matrix of the error rates.}
 }

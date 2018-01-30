@@ -18,21 +18,15 @@ solve_DAP_seq(X1, X2, lambda_seq, eps = 1e-04, maxiter = 10000,
 
 \item{maxiter}{Maximum number of iterations, the default is 10000.}
 
-\item{feature_max}{The maximum number of features that can be
-selected. Default is the total sample size. Once the maximum is
-reached, the function will return the results and larger lambda
-values won't be applied.}
+\item{feature_max}{An upper bound on the number of nonzero features in the solution; the default value is the total sample size. The algorithm trims the supplied \code{lambda_seq} to eliminate solutions that exceed \code{feature_max}.}
 }
 \value{
 A list of
-       \item{V1_mat}{A matrix of the first projection vector V1
-       corresponding to the sequence of lambda.}
-       \item{V2_mat}{A matrix of the second projection vector V2
-       corresponding to the sequence of lambda.}
-       \item{lambda_seq}{The sequence of lambda that has been
-       applied to the data.}
-       \item{nfeature_vec}{A sequence of number of selected
-       features.}
+   \item{lambda_seq}{A sequence of considered lambda values.}
+       \item{V1_mat}{A p x m matrix with columns corresponding to the 1st projection vector V1 found at each lambda from \code{lambda_seq}.}
+       \item{V2_mat}{A p x m matrix with columns corresponding to the 2nd projection vector V2 found at each lambda from \code{lambda_seq}.}
+      
+       \item{nfeature_vec}{A sequence of corresponding number of selected features for each value in \code{lambda_seq}.}
 }
 \description{
 Uses block-coordinate descent algorithm with warm initializations, starts with the maximal supplied lambda value.
@@ -56,7 +50,7 @@ xtrain = rbind(x1, x2)
 ytrain = c(rep(1, n_train), rep(2, n_train))
 
 ## Standardize the data
-out_s = standardizeData(xtrain, ytrain, center = F)
+out_s = standardizeData(xtrain, ytrain, center = FALSE)
 
 ####use solve_proj_seq
 fit = solve_DAP_seq(X1 = out_s$X1, X2 = out_s$X2, lambda_seq = c(0.2, 0.3, 0.5, 0.7, 0.9))

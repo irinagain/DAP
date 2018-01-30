@@ -2,7 +2,7 @@
 % Please edit documentation in R/solve_DAP_C.R
 \name{solve_DAP_C}
 \alias{solve_DAP_C}
-\title{Solves DAP optimization problem for one given lambda value}
+\title{Solves DAP optimization problem for a given lambda value}
 \usage{
 solve_DAP_C(X1, X2, lambda, Vinit = NULL, eps = 1e-04, maxiter = 10000)
 }
@@ -23,8 +23,8 @@ solve_DAP_C(X1, X2, lambda, Vinit = NULL, eps = 1e-04, maxiter = 10000)
 }
 \value{
 A list of
-       \item{V}{The projection matrix.}
-       \item{nfeature}{The number of selected features.}
+       \item{V}{A p x 2 projection matrix to be used in DAP classification algorithm.}
+       \item{nfeature}{Number of nonzero features.}
        \item{iter}{Number of iterations until convergence.}
 }
 \description{
@@ -54,7 +54,7 @@ xtrain = rbind(x1, x2)
 ytrain = c(rep(1, n_train), rep(2, n_train))
 
 ## Standardize the data
-out_s = standardizeData(xtrain, ytrain, center = F)
+out_s = standardizeData(xtrain, ytrain, center = FALSE)
 
 ## Apply solve_DAP_C
 out = solve_DAP_C(X1 = out_s$X1, X2 = out_s$X2, lambda = 0.3)

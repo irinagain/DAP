@@ -2,9 +2,9 @@
 % Please edit documentation in R/standardizeData.R
 \name{standardizeData}
 \alias{standardizeData}
-\title{Standardize the data}
+\title{Divides the features matrix into two standardized submatrices}
 \usage{
-standardizeData(X, Y, center = T)
+standardizeData(X, Y, center = TRUE)
 }
 \arguments{
 \item{X}{A n x p training dataset; n observations on the rows and p features on the columns.}
@@ -22,7 +22,7 @@ A list of
     \item{Xmean}{Column means of the matrix \code{X} before centering.}
 }
 \description{
-Given matrix \code{X} with corresponding class labels in \code{Y}, the function column-centers \code{X}, divides it into two submatrices corresponding to each class, and then scales the columns of each submatrix to have eucledean norm equal to one.
+Given matrix \code{X} with corresponding class labels in \code{Y}, the function column-centers \code{X}, divides it into two submatrices corresponding to each class, and scales the columns of each submatrix to have eucledean norm equal to one.
 }
 \examples{
 # An example for the function standardizeData
@@ -43,6 +43,6 @@ xtrain = rbind(x1, x2)
 ytrain = c(rep(1, n_train), rep(2, n_train))
 
 ## Standardize data
-out_s = standardizeData(xtrain, ytrain, center = F)
+out_s = standardizeData(xtrain, ytrain, center = FALSE)
 
 }

@@ -16,17 +16,17 @@
 #' @example man/examples/standardizeData_eg.R
 #'
 #' @export
-standardizeData <- function(X, Y, center = T){
+standardizeData <- function(X, Y, center = TRUE){
   # center X
   Xmean = colMeans(X)
   if (center){
-    X = X - matrix(Xmean, nrow(X), ncol(X), byrow = T)
+    X = X - matrix(Xmean, nrow(X), ncol(X), byrow = TRUE)
   }
   X1 = X[Y==1,]
   X2 = X[Y==2,]
   coef1 = sqrt(colSums(X1^2)/sum(Y==1))
   coef2 = sqrt(colSums(X2^2)/sum(Y==2))
-  X1 = X1/ matrix(coef1, nrow(X1), ncol(X1), byrow = T)
-  X2 = X2/ matrix(coef2, nrow(X2), ncol(X2), byrow = T)
+  X1 = X1/ matrix(coef1, nrow(X1), ncol(X1), byrow = TRUE)
+  X2 = X2/ matrix(coef2, nrow(X2), ncol(X2), byrow = TRUE)
   return(list(X1 = X1, X2 = X2, coef1 = coef1, coef2 = coef2, Xmean = Xmean))
 }

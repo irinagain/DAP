@@ -16,5 +16,5 @@ xtrain = rbind(x1, x2)
 ytrain = c(rep(1, n_train), rep(2, n_train))
 
 ## Standardize data
-out_s = standardizeData(xtrain, ytrain, center = F)
+out_s = standardizeData(xtrain, ytrain, center = FALSE)
 

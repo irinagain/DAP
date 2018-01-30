@@ -20,7 +20,7 @@ the function returns misclassification error rate;
 if \code{NULL}, the function returns predicted labels for \code{xtest}. 
 Default is \code{NULL}.}
 
-\item{lambda_seq}{An optional sequence of tunning parameters lambda. Deafult is \code{NULL}, and the function generates its own sequence.}
+\item{lambda_seq}{An optional sequence of tunning parameters lambda. Default is \code{NULL}, and the function generates its own sequence.}
 
 \item{n_lambda}{Number of lambda values, the default is 50.}
 

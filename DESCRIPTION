@@ -7,7 +7,7 @@ Author: Tianying Wang and Irina Gaynanova
 Maintainer: Tianying Wang <tianying@stat.tamu.edu>
 Description: An implementation of Discriminant Analysis via Projections (DAP) method for high-dimensional binary classification in the case of unequal covariance matrices.
 License: GPL (>=2)
-Imports: MASS
+Imports: MASS, stats
 LazyData: TRUE
 URL: http://github.com/irinagain/DAP
 BugReports: http://github.com/irinagain/DAP/issues

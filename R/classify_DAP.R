@@ -15,14 +15,14 @@
 #' @export
 #'
 classify_DAP <- function(xtrain, ytrain, xtest, V, prior = TRUE){
-  Vsvd = svd(V)$d
+  Vsvd = base::svd(V)$d
   ## Only for 2 column case for now, and 2 classes
   if ((min(Vsvd) < 1e-6) | (length(Vsvd) == 1)){
-    V = V[ , 1, drop = F]
+    V = V[ , 1, drop = FALSE]
     trainproj = xtrain %*% V
     testproj = xtest %*% V
-    Omega1 = 1 / var(trainproj[ytrain == 1, ])
-    Omega2 = 1 / var(trainproj[ytrain == 2, ])
+    Omega1 = 1 / stats::var(trainproj[ytrain == 1, ])
+    Omega2 = 1 / stats::var(trainproj[ytrain == 2, ])
     mu1 = mean(trainproj[ytrain == 1, ])
     mu2 = mean(trainproj[ytrain == 2, ])
     predict_vec = rep(2, nrow(xtest))
@@ -39,7 +39,7 @@ classify_DAP <- function(xtrain, ytrain, xtest, V, prior = TRUE){
     }else{
       out = MASS::qda(xtrain %*% V, grouping = ytrain, prior = c(1/2,1/2))
     }
-    pred = predict(out, newdata = xtest %*% V)
+    pred = stats::predict(out, newdata = xtest %*% V)
     
     return(as.numeric(pred$class))
   }

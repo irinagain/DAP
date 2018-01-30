@@ -19,7 +19,7 @@ xtest = rbind(x1_test, x2_test)
 ytrain = c(rep(1, n_train), rep(2, n_train))
 
 # Standardize the data
-out_s = standardizeData(xtrain, ytrain, center = F)
+out_s = standardizeData(xtrain, ytrain, center = FALSE)
 
 ## Find V
 out.proj = solve_DAP_C(X1 = out_s$X1, X2 = out_s$X2, lambda = 0.3)

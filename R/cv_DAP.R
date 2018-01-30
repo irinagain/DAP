@@ -6,6 +6,7 @@
 #' @param Y A n vector of training group labels, either 1 or 2.
 #' @param lambda_seq A sequence of tuning parameters to choose from.
 #' @param nfolds Number of folds for cross-validation, the default is 5.
+#' @param eps Convergence threshold for the block-coordinate decent algorithm based on the maximum element-wise change in \eqn{V}. The default is 1e-4.
 #' @param maxiter Maximum number of iterations, the default is 10000.
 #' @param myseed Optional specification of random seed for generating the folds, the default value is 1001.
 #' @param prior A logical indicating whether to put larger weights to the groups of larger size; the default value is \code{TRUE}.
@@ -44,7 +45,7 @@ cv_DAP <- function(X, Y, lambda_seq, nfolds = 5, eps = 1e-4, maxiter = 1000, mys
     ytrain = Y[id != nf]
     xtest = X[id == nf, ]
     ytest = Y[id == nf]
-    out_s = standardizeData(xtrain, ytrain, center = T)
+    out_s = standardizeData(xtrain, ytrain, center = TRUE)
     
     # Calculate mean difference based on test data
     d_test = colMeans(xtest[ytest == 1, ])-colMeans(xtest[ytest == 2, ])
@@ -56,7 +57,7 @@ cv_DAP <- function(X, Y, lambda_seq, nfolds = 5, eps = 1e-4, maxiter = 1000, mys
     #### Calculate errors for each lambda
     for (j in 1:length(fit_tmp$lambda_seq)){
       V = cbind(diag(1 / out_s$coef1) %*% fit_tmp$V1_mat[, j], diag(1 / out_s$coef2) %*% fit_tmp$V2_mat[, j])
-      ypred = classify_DAP(xtrain - matrix(out_s$Xmean, nrow(xtrain), ncol(xtest), byrow = T), ytrain, xtest = xtest - matrix(out_s$Xmean, nrow(xtest), ncol(xtest), byrow = T), V, prior = prior)
+      ypred = classify_DAP(xtrain - matrix(out_s$Xmean, nrow(xtrain), ncol(xtest), byrow = TRUE), ytrain, xtest = xtest - matrix(out_s$Xmean, nrow(xtest), ncol(xtest), byrow = TRUE), V, prior = prior)
       error_mat[nf, j] = sum(ypred != ytest) / length(ytest)
     }
   }
@@ -65,7 +66,7 @@ cv_DAP <- function(X, Y, lambda_seq, nfolds = 5, eps = 1e-4, maxiter = 1000, mys
   index = which.min(cvm)
   lambda_min = lambda_seq[index]
   
-  cvse = apply(error_mat, 2, sd) / sqrt(nfolds)
+  cvse = apply(error_mat, 2, stats::sd) / sqrt(nfolds)
   se_lambda = cvse[index]
   up_b = cvm[index] + se_lambda
   lambda_1se = (lambda_seq[cvm <= up_b])[1]
