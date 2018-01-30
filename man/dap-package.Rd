@@ -5,7 +5,7 @@
 \alias{dap-package}
 \title{Discriminant Analysis via Projections}
 \description{
-This package provides tools for discriminant analysis on binary classification. It contains functions \code{apply_DAP, classify_DAP, cv_DAP, solve_DAP_C, solve_DAP, solve_DAP_seq} for implementing the method Discriminant Analysis via Projections.
+This package provides tools for high-dimensional binary classification in the presense of unequal covariance matrices. It contains functions \code{apply_DAP, classify_DAP, cv_DAP, solve_DAP_C, solve_DAP, solve_DAP_seq} for implementing Discriminant Analysis via Projections method.
 }
 \author{
 Irina Gaynanova and Tianying Wang.
