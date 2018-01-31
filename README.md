@@ -6,6 +6,7 @@ The R package `DAP` provides tools for high-dimensional binary classification in
 
 To install the latest version from Github, use
 ```s
+library(devtools)
 devtools::install_github("irinagain/DAP")
 ```
 ## Usage
