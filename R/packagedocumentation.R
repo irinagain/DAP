@@ -6,6 +6,9 @@
 #' @docType package
 #' @author Irina Gaynanova and Tianying Wang.
 #'
+#' @references 
+#' Gaynanova, I. and Wang, T. "Sparse quadratic classification rules via linear dimension reduction". arxiv.org/abs/1711.04817 (2018+)
+#' 
 #' @keywords package
 #'
 NULL
