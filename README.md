@@ -1,3 +1,6 @@
+
+[![](https://cranlogs.r-pkg.org/badges/DAP)](https://cran.rstudio.com/web/packages/DAP/index.html)
+
 # DAP: Discriminant Analysis via Projections
 The R package `DAP` provides tools for high-dimensional binary classification in the case of unequal covariance matrices. It  implements methods from the following paper:
 * [Sparse quadratic classification rules via linear dimension reduction](https://arxiv.org/abs/1711.04817) by Gaynanova and Wang (2017).
